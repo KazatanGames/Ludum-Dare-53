@@ -1,0 +1,14 @@
+# This .gitignore file should be placed at the root of your Kazatan Games project directory
+
+[Vv]ideo/
+[Tt]emp/
+[Cc]oncepts/
+[Bb]uilds/
+[Cc]reative/
+
+
+# Visual Studio cache directory
+.vs/
+
+# Draw.io
+*.drawio.bkp
