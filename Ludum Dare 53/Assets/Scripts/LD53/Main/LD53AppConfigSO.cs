@@ -33,6 +33,12 @@ namespace KazatanGames.LD53
         public float firePowerIncrease = 5f;
         public float maxFirePower = 10f;
         public float parcelDropOffset = 2f;
+        public float parcelYFireSpeed = -2f;
+        public float parcelDroneVelocityMulti = 0.25f;
+        public float aimArrowMinScaleX = 1f;
+        public float aimArrowMaxScaleX = 2f;
+        public float aimArrowMinScaleZ = 1f;
+        public float aimArrowMaxScaleZ = 3f;
 
         [Header("Generation")]
         public Vector2Int playAreaSize = new(128, 128);

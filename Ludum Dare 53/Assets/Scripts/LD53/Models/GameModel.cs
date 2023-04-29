@@ -23,6 +23,8 @@ namespace KazatanGames.LD53
         public bool playerFiring;
         public bool playerFired;
         public float firePower;
+        public float firePowerRatio;
+        public Vector2 aimInput;
 
         public CellData[,] cells;
 
@@ -38,6 +40,8 @@ namespace KazatanGames.LD53
             droneSpeed = 0;
             playerFiring = false;
             firePower = 0;
+            firePowerRatio = 0;
+            aimInput = Vector2.zero;
             cells = WorldGen.Generate(LD53AppManager.INSTANCE.AppConfig.playAreaSize.x, LD53AppManager.INSTANCE.AppConfig.playAreaSize.y);
         }
 
@@ -49,21 +53,25 @@ namespace KazatanGames.LD53
             }
             else
             {
+                Vector2 fireAngle = new(aimInput.x - dronePosition.x, aimInput.y - dronePosition.z);
                 if (playerFiring)
                 {
                     firePower += LD53AppManager.INSTANCE.AppConfig.firePowerIncrease * tickTime;
                     if (firePower > LD53AppManager.INSTANCE.AppConfig.maxFirePower)
                     {
-                        OnFire?.Invoke(dronePosition, Vector3.zero);
+                        OnFire?.Invoke(dronePosition, new Vector3(fireAngle.normalized.x * firePower, LD53AppManager.INSTANCE.AppConfig.parcelYFireSpeed, fireAngle.normalized.y * firePower) + droneVelocity * LD53AppManager.INSTANCE.AppConfig.parcelDroneVelocityMulti);
                         firePower = 0;
+                        playerFired = true;
                     }
                 }
                 else if (firePower > 0)
                 {
-                    OnFire?.Invoke(dronePosition, Vector3.zero);
+                    OnFire?.Invoke(dronePosition, new Vector3(fireAngle.normalized.x * firePower, LD53AppManager.INSTANCE.AppConfig.parcelYFireSpeed, fireAngle.normalized.y * firePower) + droneVelocity * LD53AppManager.INSTANCE.AppConfig.parcelDroneVelocityMulti);
                     firePower = 0;
+                    playerFired = true;
                 }
             }
+            firePowerRatio = firePower / LD53AppManager.INSTANCE.AppConfig.maxFirePower;
         }
 
         public void Frame(float frameTime)

@@ -14,6 +14,6 @@ namespace KazatanGames.LD53
 {
     public class ParcelController : MonoBehaviour
     {
-
+        public Rigidbody body;
     }
 }

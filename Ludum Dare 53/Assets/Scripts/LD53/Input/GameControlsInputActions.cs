@@ -41,11 +41,20 @@ namespace KazatanGames.LD53
                 {
                     ""name"": ""Fire"",
                     ""type"": ""Button"",
-                    ""id"": ""20fc26e0-e0ea-417b-95ad-dfb1d5fd3eb9"",
+                    ""id"": ""600ab231-ee55-42c4-916e-306b572de1a6"",
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Aiming"",
+                    ""type"": ""Value"",
+                    ""id"": ""e79bb0d5-496b-4c2b-a1d6-799c3e7b1353"",
+                    ""expectedControlType"": ""Vector2"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -66,7 +75,7 @@ namespace KazatanGames.LD53
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""Keyboard & Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -77,7 +86,7 @@ namespace KazatanGames.LD53
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""Keyboard & Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -88,7 +97,7 @@ namespace KazatanGames.LD53
                     ""path"": ""<Keyboard>/a"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""Keyboard & Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -99,19 +108,30 @@ namespace KazatanGames.LD53
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""Keyboard & Mouse"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 },
                 {
                     ""name"": """",
-                    ""id"": ""08b47c58-24cd-472a-873a-8b4dafb1f128"",
+                    ""id"": ""4f5d76c9-6ae5-4688-a299-dbadcc9d6d8c"",
                     ""path"": ""<Keyboard>/space"",
                     ""interactions"": """",
                     ""processors"": """",
-                    ""groups"": ""Keyboard"",
+                    ""groups"": ""Keyboard & Mouse"",
                     ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""5ab98189-fd8a-4088-9771-8a40445a965d"",
+                    ""path"": ""<Mouse>/position"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""Aiming"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -120,11 +140,16 @@ namespace KazatanGames.LD53
     ],
     ""controlSchemes"": [
         {
-            ""name"": ""Keyboard"",
-            ""bindingGroup"": ""Keyboard"",
+            ""name"": ""Keyboard & Mouse"",
+            ""bindingGroup"": ""Keyboard & Mouse"",
             ""devices"": [
                 {
                     ""devicePath"": ""<Keyboard>"",
+                    ""isOptional"": false,
+                    ""isOR"": false
+                },
+                {
+                    ""devicePath"": ""<Mouse>"",
                     ""isOptional"": false,
                     ""isOR"": false
                 }
@@ -136,6 +161,7 @@ namespace KazatanGames.LD53
             m_DroneFlying = asset.FindActionMap("Drone Flying", throwIfNotFound: true);
             m_DroneFlying_Movement = m_DroneFlying.FindAction("Movement", throwIfNotFound: true);
             m_DroneFlying_Fire = m_DroneFlying.FindAction("Fire", throwIfNotFound: true);
+            m_DroneFlying_Aiming = m_DroneFlying.FindAction("Aiming", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -197,12 +223,14 @@ namespace KazatanGames.LD53
         private IDroneFlyingActions m_DroneFlyingActionsCallbackInterface;
         private readonly InputAction m_DroneFlying_Movement;
         private readonly InputAction m_DroneFlying_Fire;
+        private readonly InputAction m_DroneFlying_Aiming;
         public struct DroneFlyingActions
         {
             private @GameControlsInputActions m_Wrapper;
             public DroneFlyingActions(@GameControlsInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Movement => m_Wrapper.m_DroneFlying_Movement;
             public InputAction @Fire => m_Wrapper.m_DroneFlying_Fire;
+            public InputAction @Aiming => m_Wrapper.m_DroneFlying_Aiming;
             public InputActionMap Get() { return m_Wrapper.m_DroneFlying; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -218,6 +246,9 @@ namespace KazatanGames.LD53
                     @Fire.started -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnFire;
                     @Fire.performed -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnFire;
                     @Fire.canceled -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnFire;
+                    @Aiming.started -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnAiming;
+                    @Aiming.performed -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnAiming;
+                    @Aiming.canceled -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnAiming;
                 }
                 m_Wrapper.m_DroneFlyingActionsCallbackInterface = instance;
                 if (instance != null)
@@ -228,23 +259,27 @@ namespace KazatanGames.LD53
                     @Fire.started += instance.OnFire;
                     @Fire.performed += instance.OnFire;
                     @Fire.canceled += instance.OnFire;
+                    @Aiming.started += instance.OnAiming;
+                    @Aiming.performed += instance.OnAiming;
+                    @Aiming.canceled += instance.OnAiming;
                 }
             }
         }
         public DroneFlyingActions @DroneFlying => new DroneFlyingActions(this);
-        private int m_KeyboardSchemeIndex = -1;
-        public InputControlScheme KeyboardScheme
+        private int m_KeyboardMouseSchemeIndex = -1;
+        public InputControlScheme KeyboardMouseScheme
         {
             get
             {
-                if (m_KeyboardSchemeIndex == -1) m_KeyboardSchemeIndex = asset.FindControlSchemeIndex("Keyboard");
-                return asset.controlSchemes[m_KeyboardSchemeIndex];
+                if (m_KeyboardMouseSchemeIndex == -1) m_KeyboardMouseSchemeIndex = asset.FindControlSchemeIndex("Keyboard & Mouse");
+                return asset.controlSchemes[m_KeyboardMouseSchemeIndex];
             }
         }
         public interface IDroneFlyingActions
         {
             void OnMovement(InputAction.CallbackContext context);
             void OnFire(InputAction.CallbackContext context);
+            void OnAiming(InputAction.CallbackContext context);
         }
     }
 }

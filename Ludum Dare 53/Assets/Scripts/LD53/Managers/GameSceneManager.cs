@@ -34,6 +34,7 @@ namespace KazatanGames.LD53
         protected int tick;
         protected GameControlsInputActions controls;
         protected Transform container;
+        protected Plane p = new(Vector3.left, Vector3.forward, Vector3.right);
 
         // controllers
         protected DroneController droneController;
@@ -234,10 +235,22 @@ namespace KazatanGames.LD53
         protected void DoInput()
         {
             Vector2 moveInput = controls.DroneFlying.Movement.ReadValue<Vector2>();
+            Vector2 aimInputRaw = controls.DroneFlying.Aiming.ReadValue<Vector2>();
 
             float heightAccel = 0f;
 
             GameModel.Current.dronePlayerAccel = new(LD53AppManager.INSTANCE.AppConfig.droneAcceleration * moveInput.x, heightAccel, LD53AppManager.INSTANCE.AppConfig.droneAcceleration * moveInput.y);
+
+            Ray r = Camera.main.ScreenPointToRay(aimInputRaw);
+            Vector2 aimInput = Vector2.zero;
+
+            if (p.Raycast(r, out float distance))
+            {
+                Vector3 aimPoint = r.GetPoint(distance);
+                aimInput = new Vector2(aimPoint.x, aimPoint.z);
+            }
+
+            GameModel.Current.aimInput = aimInput;
         }
 
         protected void Tick()
@@ -268,6 +281,7 @@ namespace KazatanGames.LD53
         {
             ParcelController pc = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.parcelPrefab, container).GetComponent<ParcelController>();
             pc.transform.localPosition = position - new Vector3(0f, LD53AppManager.INSTANCE.AppConfig.parcelDropOffset, 0f);
+            pc.body.AddForce(velocity, ForceMode.VelocityChange);
         }
     }
 }

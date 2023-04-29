@@ -35,6 +35,10 @@ MonoBehaviour:
   droneAcceleration: 75
   rotorMaxLeanAngle: 25
   droneMaxLeanAngle: 15
+  firePowerIncrease: 12
+  maxFirePower: 10
+  parcelDropOffset: 2
+  aimArrowMaxScale: 3
   playAreaSize: {x: 32, y: 24}
   playAreaGridSize: 8
   grassChance: 0.5

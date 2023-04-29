@@ -14,6 +14,11 @@ namespace KazatanGames.LD53
 {
     public class DroneController : MonoBehaviour
     {
+        [SerializeField]
+        protected Transform aimArrowStretcher; // stretch this (z)
+        [SerializeField]
+        protected Transform aimArrow; // rotate this
+
         private void Awake()
         {
             UpdatePosition();
@@ -25,6 +30,7 @@ namespace KazatanGames.LD53
 
             UpdatePosition();
             UpdateRotation();
+            UpdateArrow();
         }
 
         protected void UpdatePosition()
@@ -41,6 +47,21 @@ namespace KazatanGames.LD53
             float leanAngleZ = -Mathf.Lerp(-LD53AppManager.INSTANCE.AppConfig.droneMaxLeanAngle, LD53AppManager.INSTANCE.AppConfig.droneMaxLeanAngle, leanX);
 
             transform.localRotation = Quaternion.Euler(leanAngleX, 0f, leanAngleZ);
+        }
+
+        protected void UpdateArrow()
+        {
+            if (GameModel.Current.firePower > 0)
+            {
+                if (!aimArrow.gameObject.activeSelf) aimArrow.gameObject.SetActive(true);
+
+                aimArrowStretcher.localScale = new Vector3(Mathf.Lerp(LD53AppManager.INSTANCE.AppConfig.aimArrowMinScaleX, LD53AppManager.INSTANCE.AppConfig.aimArrowMaxScaleX, GameModel.Current.firePowerRatio), 1f, Mathf.Lerp(LD53AppManager.INSTANCE.AppConfig.aimArrowMinScaleZ, LD53AppManager.INSTANCE.AppConfig.aimArrowMaxScaleZ, GameModel.Current.firePowerRatio));
+
+                aimArrow.LookAt(new Vector3(GameModel.Current.aimInput.x, transform.position.y, GameModel.Current.aimInput.y));
+            } else
+            {
+                if (aimArrow.gameObject.activeSelf) aimArrow.gameObject.SetActive(false);
+            }
         }
     }
 }
