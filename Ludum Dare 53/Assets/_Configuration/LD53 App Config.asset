@@ -37,9 +37,10 @@ MonoBehaviour:
   droneMaxLeanAngle: 15
   playAreaSize: {x: 32, y: 24}
   playAreaGridSize: 8
-  grassChance: 0.3
+  grassChance: 0.5
   grassScale: 3.42
-  genOffices: 15
+  genOffices: 20
   genRoads: 5
-  genLoops: 10
-  roadStraightChance: 0.9
+  genGrass: 1
+  genLoops: 12
+  roadStraightChance: 0.8

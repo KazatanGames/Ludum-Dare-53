@@ -20,8 +20,13 @@ namespace KazatanGames.LD53
         public Vector3 dronePlayerAccel;
         public Vector3 droneWindAccel;
         public float droneSpeed;
+        public bool playerFiring;
+        public bool playerFired;
+        public float firePower;
 
         public CellData[,] cells;
+
+        public event Action<Vector3, Vector3> OnFire;
 
         public void Reset()
         {
@@ -31,12 +36,34 @@ namespace KazatanGames.LD53
             dronePlayerAccel = Vector3.zero;
             droneWindAccel = Vector3.zero;
             droneSpeed = 0;
+            playerFiring = false;
+            firePower = 0;
             cells = WorldGen.Generate(LD53AppManager.INSTANCE.AppConfig.playAreaSize.x, LD53AppManager.INSTANCE.AppConfig.playAreaSize.y);
         }
 
         public void Tick(float tickTime)
         {
-
+            if (playerFired)
+            {
+                if (!playerFiring) playerFired = false;
+            }
+            else
+            {
+                if (playerFiring)
+                {
+                    firePower += LD53AppManager.INSTANCE.AppConfig.firePowerIncrease * tickTime;
+                    if (firePower > LD53AppManager.INSTANCE.AppConfig.maxFirePower)
+                    {
+                        OnFire?.Invoke(dronePosition, Vector3.zero);
+                        firePower = 0;
+                    }
+                }
+                else if (firePower > 0)
+                {
+                    OnFire?.Invoke(dronePosition, Vector3.zero);
+                    firePower = 0;
+                }
+            }
         }
 
         public void Frame(float frameTime)

@@ -37,6 +37,15 @@ namespace KazatanGames.LD53
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Fire"",
+                    ""type"": ""Button"",
+                    ""id"": ""20fc26e0-e0ea-417b-95ad-dfb1d5fd3eb9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -94,6 +103,17 @@ namespace KazatanGames.LD53
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""08b47c58-24cd-472a-873a-8b4dafb1f128"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -115,6 +135,7 @@ namespace KazatanGames.LD53
             // Drone Flying
             m_DroneFlying = asset.FindActionMap("Drone Flying", throwIfNotFound: true);
             m_DroneFlying_Movement = m_DroneFlying.FindAction("Movement", throwIfNotFound: true);
+            m_DroneFlying_Fire = m_DroneFlying.FindAction("Fire", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -175,11 +196,13 @@ namespace KazatanGames.LD53
         private readonly InputActionMap m_DroneFlying;
         private IDroneFlyingActions m_DroneFlyingActionsCallbackInterface;
         private readonly InputAction m_DroneFlying_Movement;
+        private readonly InputAction m_DroneFlying_Fire;
         public struct DroneFlyingActions
         {
             private @GameControlsInputActions m_Wrapper;
             public DroneFlyingActions(@GameControlsInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Movement => m_Wrapper.m_DroneFlying_Movement;
+            public InputAction @Fire => m_Wrapper.m_DroneFlying_Fire;
             public InputActionMap Get() { return m_Wrapper.m_DroneFlying; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -192,6 +215,9 @@ namespace KazatanGames.LD53
                     @Movement.started -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnMovement;
                     @Movement.performed -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnMovement;
                     @Movement.canceled -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnMovement;
+                    @Fire.started -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnFire;
+                    @Fire.performed -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnFire;
+                    @Fire.canceled -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnFire;
                 }
                 m_Wrapper.m_DroneFlyingActionsCallbackInterface = instance;
                 if (instance != null)
@@ -199,6 +225,9 @@ namespace KazatanGames.LD53
                     @Movement.started += instance.OnMovement;
                     @Movement.performed += instance.OnMovement;
                     @Movement.canceled += instance.OnMovement;
+                    @Fire.started += instance.OnFire;
+                    @Fire.performed += instance.OnFire;
+                    @Fire.canceled += instance.OnFire;
                 }
             }
         }
@@ -215,6 +244,7 @@ namespace KazatanGames.LD53
         public interface IDroneFlyingActions
         {
             void OnMovement(InputAction.CallbackContext context);
+            void OnFire(InputAction.CallbackContext context);
         }
     }
 }

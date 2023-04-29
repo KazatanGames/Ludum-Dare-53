@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using Cinemachine;
 
 /**
@@ -51,6 +52,19 @@ namespace KazatanGames.LD53
         private void Start()
         {
             controls.DroneFlying.Enable();
+            GameModel.Current.OnFire += OnPlayerFire;
+            controls.DroneFlying.Fire.performed += OnPlayerPowerUpStart;
+            controls.DroneFlying.Fire.canceled += OnPlayerPowerUpEnd;
+        }
+
+        private void OnDestroy()
+        {
+            GameModel.Current.OnFire -= OnPlayerFire;
+            if (controls != null)
+            {
+                controls.DroneFlying.Fire.performed -= OnPlayerPowerUpStart;
+                controls.DroneFlying.Fire.canceled -= OnPlayerPowerUpEnd;
+            }
         }
 
         private void Update()
@@ -238,6 +252,22 @@ namespace KazatanGames.LD53
         {
             Reset();
             Build();
+        }
+
+        protected void OnPlayerPowerUpStart(InputAction.CallbackContext context)
+        {
+            GameModel.Current.playerFiring = true;
+        }
+
+        protected void OnPlayerPowerUpEnd(InputAction.CallbackContext context)
+        {
+            GameModel.Current.playerFiring = false;
+        }
+
+        protected void OnPlayerFire(Vector3 position, Vector3 velocity)
+        {
+            ParcelController pc = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.parcelPrefab, container).GetComponent<ParcelController>();
+            pc.transform.localPosition = position - new Vector3(0f, LD53AppManager.INSTANCE.AppConfig.parcelDropOffset, 0f);
         }
     }
 }

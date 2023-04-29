@@ -19,6 +19,9 @@ namespace KazatanGames.LD53
         [Header("Player")]
         public DroneController dronePrefab;
 
+        [Header("Parcel")]
+        public ParcelController parcelPrefab;
+
         [Header("Cell Types")]
         public OfficeBuildingController officeBuilding;
         public Transform roadStraight;
