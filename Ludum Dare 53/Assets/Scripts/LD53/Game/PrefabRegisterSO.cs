@@ -17,5 +17,9 @@ namespace KazatanGames.LD53
     public class PrefabRegisterSO : ScriptableObject
     {
         public Transform dronePrefab;
+        public Transform officeBuilding;
+        public Transform officeBuildingTop;
+        public Transform officeBuildingMid;
+        public Transform officeBuildingInterest;
     }
 }

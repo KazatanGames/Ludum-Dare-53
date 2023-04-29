@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using Cinemachine;
 
 /**
  * Ludum Dare 53
@@ -14,6 +15,10 @@ namespace KazatanGames.LD53
 {
     public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     {
+        [Header("In Scene")]
+        [SerializeField]
+        protected CinemachineVirtualCameraBase topDownCamera;
+
         [Header("Settings")]
         [SerializeField]
         [Min(1)]
@@ -57,6 +62,8 @@ namespace KazatanGames.LD53
                 Tick();
                 timeBank -= frameTime;
             }
+
+            GameModel.Current.Frame(Time.deltaTime);
         }
 
         protected void Reset()
@@ -65,11 +72,15 @@ namespace KazatanGames.LD53
             frameTime = 1f / simulationFps;
             pausedForStart = false;
             tick = 0;
+            GameModel.Current.Reset();
         }
 
         protected void Build()
         {
             droneController = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.dronePrefab, transform).GetComponent<DroneController>();
+
+            topDownCamera.Follow = droneController.transform;
+            topDownCamera.LookAt = droneController.transform;
         }
 
         protected void DoInput()

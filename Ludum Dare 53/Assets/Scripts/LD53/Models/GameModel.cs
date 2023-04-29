@@ -31,7 +31,12 @@ namespace KazatanGames.LD53
             droneSpeed = 0;
         }
 
-        public void Tick(float frameTime)
+        public void Tick(float tickTime)
+        {
+
+        }
+
+        public void Frame(float frameTime)
         {
             droneAcceleration = dronePlayerAccel + droneWindAccel;
 
@@ -47,14 +52,14 @@ namespace KazatanGames.LD53
             newDroneVelocity += droneAcceleration * frameTime;
 
             // drag
-            Vector3 drag = newDroneVelocity *= LD53AppManager.INSTANCE.AppConfig.droneDragCoeff;
-            newDroneVelocity -= drag;
+            Vector3 drag = newDroneVelocity * LD53AppManager.INSTANCE.AppConfig.droneDragCoeff;
+            newDroneVelocity -= drag * frameTime;
 
             // calc new speed
             float newDroneSpeed = newDroneVelocity.magnitude;
 
             // clamp speed
-            if (newDroneSpeed <= 0.005f)
+            if (newDroneSpeed <= 0.001f)
             {
                 newDroneVelocity = Vector3.zero;
                 newDroneSpeed = 0f;

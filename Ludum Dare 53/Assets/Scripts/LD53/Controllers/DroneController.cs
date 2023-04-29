@@ -14,19 +14,8 @@ namespace KazatanGames.LD53
 {
     public class DroneController : MonoBehaviour
     {
-        [SerializeField]
-        protected DroneRotorDescriptor[] rotors;
-
-        protected List<float> rotorRotations;
-
         private void Awake()
         {
-            rotorRotations = new();
-            for(int i = 0; i < rotors.Length; i++)
-            {
-                rotorRotations.Add(0f);
-            }
-
             UpdatePosition();
         }
 
@@ -35,7 +24,7 @@ namespace KazatanGames.LD53
             if (GameSceneManager.INSTANCE.IsPaused) return;
 
             UpdatePosition();
-            UpdateRotors();
+            UpdateRotation();
         }
 
         protected void UpdatePosition()
@@ -43,18 +32,15 @@ namespace KazatanGames.LD53
             transform.position = GameModel.Current.dronePosition;
         }
 
-        protected void UpdateRotors()
+        protected void UpdateRotation()
         {
-            for(int i = 0; i < rotors.Length; i++)
-            {
-                DroneRotorDescriptor drd = rotors[i];
-                float rotorSpeed = GameModel.Current.droneAcceleration.x * drd.rotorWeights.x + GameModel.Current.droneAcceleration.y * drd.rotorWeights.y + GameModel.Current.droneAcceleration.z * drd.rotorWeights.z;
-                float rRot = rotorRotations[i];
-                rRot += rotorSpeed * LD53AppManager.INSTANCE.AppConfig.maxRotorRotationSpeed * Time.deltaTime;
-                rRot %= 360f;
-                rotorRotations[i] = rRot;
-                drd.rotorTransform.localRotation = Quaternion.Euler(90f, rRot, 0f);
-            }
+            float leanX = (GameModel.Current.dronePlayerAccel.normalized.x / 2f) + 0.5f;
+            float leanZ = (GameModel.Current.dronePlayerAccel.normalized.z / 2f) + 0.5f;
+
+            float leanAngleX = Mathf.Lerp(-LD53AppManager.INSTANCE.AppConfig.droneMaxLeanAngle, LD53AppManager.INSTANCE.AppConfig.droneMaxLeanAngle, leanZ);
+            float leanAngleZ = -Mathf.Lerp(-LD53AppManager.INSTANCE.AppConfig.droneMaxLeanAngle, LD53AppManager.INSTANCE.AppConfig.droneMaxLeanAngle, leanX);
+
+            transform.localRotation = Quaternion.Euler(leanAngleX, 0f, leanAngleZ);
         }
     }
 }

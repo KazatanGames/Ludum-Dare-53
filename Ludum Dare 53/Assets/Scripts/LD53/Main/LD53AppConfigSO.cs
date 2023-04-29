@@ -24,10 +24,11 @@ namespace KazatanGames.LD53
 
         [Header("Game Settings")]
         public Vector3 droneStartPosition = new(0, 20, 0);
-        [Range(0f, 1f)]
-        public float droneDragCoeff = 0.05f;
+        public float droneDragCoeff = 2f;
         public float maxDroneSpeed = 10f;
-        public float maxRotorRotationSpeed = 720f;
+        public float rotorRotationSpeed = 720f;
         public float droneAcceleration = 5f;
+        public float rotorMaxLeanAngle = 25f;
+        public float droneMaxLeanAngle = 15f;
     }
 }

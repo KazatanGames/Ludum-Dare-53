@@ -14,3 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dronePrefab: {fileID: 1906077888258090652, guid: 0fdd9788eb5abb64d864be43668370f6,
     type: 3}
+  officeBuilding: {fileID: 2045254043733930402, guid: f714b6972fb9d4a4fadab9d5eaabd6ac,
+    type: 3}
+  officeBuildingTop: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
+    type: 3}
+  officeBuildingMid: {fileID: 6444438479571972569, guid: 0a95b8f4e9b276a45a5a41dfa945a09a,
+    type: 3}
+  officeBuildingInterest: {fileID: 6694503383001557785, guid: f9b6ecec80016674ea1d9a96a5723078,
+    type: 3}
