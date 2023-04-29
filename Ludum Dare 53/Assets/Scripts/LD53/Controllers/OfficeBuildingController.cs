@@ -14,30 +14,30 @@ namespace KazatanGames.LD53
     public class OfficeBuildingController : MonoBehaviour
     {
         [SerializeField]
-        protected int minMidFloors = 3;
+        protected BoxCollider physicsCollider;
+
         [SerializeField]
-        protected int maxMidFloors = 12;
+        protected int minFloors = 3;
         [SerializeField]
-        protected float interestChance = 0.75f;
+        protected int maxFloors = 12;
         [SerializeField]
-        protected float floorSpacing = 0.25f;
+        protected float floorSpacing = 2f;
 
         private void Awake()
         {
-            int floors = Random.Range(minMidFloors, maxMidFloors);
+            int floors = Random.Range(minFloors, maxFloors);
             for(int i = 0; i < floors; i++)
             {
-                Transform t = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.officeBuildingMid, transform);
+                Transform t = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.officeBuildingFloor, transform);
                 t.localPosition = new(0, i * floorSpacing, 0f);
             }
             {
                 Transform t = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.officeBuildingTop, transform);
                 t.localPosition = new(0, floors * floorSpacing, 0f);
             }
-            if (Random.value <= interestChance) {
-                Transform t = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.officeBuildingInterest, transform);
-                t.localPosition = new((Random.value * 16f) - 8f, (floors + 1) * floorSpacing, (Random.value * 16f) - 8f);
-            }
+
+            physicsCollider.center = new(0, (floors + 1) * floorSpacing / 2f, 0);
+            physicsCollider.size = new(physicsCollider.size.x, (floors + 1) * floorSpacing, physicsCollider.size.z);
         }
 
     }

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2045254043733930402}
   - component: {fileID: 2045254043733930403}
+  - component: {fileID: 6901424894979998187}
   m_Layer: 0
   m_Name: Office Building
   m_TagString: Untagged
@@ -28,8 +29,7 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 6753310436479046949}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -45,82 +45,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d8f83d21c7fcc48a51d5205577f682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minMidFloors: 10
-  maxMidFloors: 20
-  interestChance: 0.5
-  floorSpacing: 0.5
---- !u!1001 &1336353610888203329
-PrefabInstance:
+  physicsCollider: {fileID: 6901424894979998187}
+  minFloors: 5
+  maxFloors: 10
+  floorSpacing: 2
+--- !u!65 &6901424894979998187
+BoxCollider:
   m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    m_TransformParent: {fileID: 2045254043733930402}
-    m_Modifications:
-    - target: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_RootOrder
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0.7071068
-      objectReference: {fileID: 0}
-    - target: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 90
-      objectReference: {fileID: 0}
-    - target: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6048619615729856654, guid: d9130a8de251c654ca47128f653f70b7,
-        type: 3}
-      propertyPath: m_Name
-      value: Office Top
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d9130a8de251c654ca47128f653f70b7, type: 3}
---- !u!4 &6753310436479046949 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 5706969512474630500, guid: d9130a8de251c654ca47128f653f70b7,
-    type: 3}
-  m_PrefabInstance: {fileID: 1336353610888203329}
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2045254043733930400}
+  m_Material: {fileID: 13400000, guid: 785209c9037fd9d4195da7687e1426df, type: 2}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 8, y: 0, z: 8}
+  m_Center: {x: 0, y: 0, z: 0}

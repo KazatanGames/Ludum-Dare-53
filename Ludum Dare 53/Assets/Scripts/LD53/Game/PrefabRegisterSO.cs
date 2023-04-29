@@ -19,7 +19,6 @@ namespace KazatanGames.LD53
         public Transform dronePrefab;
         public Transform officeBuilding;
         public Transform officeBuildingTop;
-        public Transform officeBuildingMid;
-        public Transform officeBuildingInterest;
+        public Transform officeBuildingFloor;
     }
 }
