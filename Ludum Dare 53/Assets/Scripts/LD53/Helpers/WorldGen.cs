@@ -30,6 +30,7 @@ namespace KazatanGames.LD53
             Simple2DNoise n = new(w, h);
 
             List<GridPos> validCells = new();
+            HashSet<GridPos> validCellsHash = new();
 
             for (int x = 0; x < w; x++)
             {
@@ -59,12 +60,21 @@ namespace KazatanGames.LD53
                         cell.cellType = CellTypeEnum.Grass;
                     }
 
-                    if (cell.cellType == CellTypeEnum.Concrete) validCells.Add(new(x, y));
+                    if (cell.cellType == CellTypeEnum.Concrete)
+                    {
+                        GridPos cellPos = new(x, y);
+                        validCells.Add(cellPos);
+                        validCellsHash.Add(cellPos);
+                    }
                 }
             }
 
-            validCells = RandomOffices(cells, LD53AppManager.INSTANCE.AppConfig.initialOffices, validCells);
-            validCells = RandomRoads(cells, LD53AppManager.INSTANCE.AppConfig.initialRoads, validCells);
+            for (int i = 0; i < LD53AppManager.INSTANCE.AppConfig.genLoops; i++)
+            {
+                RandomOffices(cells, LD53AppManager.INSTANCE.AppConfig.genOffices, ref validCells, ref validCellsHash);
+                RandomRoads(cells, LD53AppManager.INSTANCE.AppConfig.genRoads, ref validCells, ref validCellsHash, w, h);
+                RandomGrass(cells, LD53AppManager.INSTANCE.AppConfig.genGrass, ref validCells, ref validCellsHash);
+            }
 
             return cells;
         }
@@ -74,34 +84,89 @@ namespace KazatanGames.LD53
             return x == offset || y == offset || x == (w - (1 + offset)) || y == (h - (1 + offset));
         }
 
-        private static List<GridPos> RandomOffices(CellData[,] cells, int num, List<GridPos> validCells)
+        private static void RandomOffices(CellData[,] cells, int num, ref List<GridPos> validCells, ref HashSet<GridPos> validCellsHash)
         {
             for(int i = 0; i < num; i++)
             {
-                if (validCells.Count == 0) return validCells;
+                if (validCells.Count == 0) return;
                 int rnd = Random.Range(0, validCells.Count);
                 GridPos pos = validCells[rnd];
                 validCells.RemoveAt(rnd);
-
+                validCellsHash.Remove(pos);
                 cells[pos.x, pos.z].cellType = CellTypeEnum.Office;
             }
-
-            return validCells;
         }
 
-        private static List<GridPos> RandomRoads(CellData[,] cells, int num, List<GridPos> validCells)
+        private static void RandomRoads(CellData[,] cells, int num, ref List<GridPos> validCells, ref HashSet<GridPos> validCellsHash, int w, int h)
         {
             for (int i = 0; i < num; i++)
             {
-                if (validCells.Count == 0) return validCells;
+                if (validCells.Count == 0) return;
                 int rnd = Random.Range(0, validCells.Count);
                 GridPos pos = validCells[rnd];
                 validCells.RemoveAt(rnd);
+                validCellsHash.Remove(pos);
 
                 cells[pos.x, pos.z].cellType = CellTypeEnum.Road;
-            }
 
-            return validCells;
+                bool roadComplete = false;
+                bool firstCheck = true;
+                GameDirection potentialNeighbours = GameDirectionHelper.All;
+                GameDirection favouredDirection = GameDirectionHelper.RandomSingle;
+                GameDirection sourceDirection = GameDirectionHelper.Nil;
+                while (!roadComplete && potentialNeighbours.Count() > 0)
+                {
+                    GameDirection testDir = favouredDirection;
+
+                    if (!potentialNeighbours.Test(favouredDirection) || Random.value > LD53AppManager.INSTANCE.AppConfig.roadStraightChance)
+                    {
+                        testDir = potentialNeighbours.RandomSinglePreferAdjacent(favouredDirection);
+                    }
+
+                    potentialNeighbours &= ~testDir;
+
+                    GridPos testPos = pos.Adjacent(testDir);
+                    if (validCellsHash.Contains(testPos))
+                    {
+                        pos = testPos;
+                        validCells.RemoveAt(validCells.IndexOf(pos));
+                        validCellsHash.Remove(pos);
+
+                        cells[pos.x, pos.z].cellType = CellTypeEnum.Road;
+                        potentialNeighbours = GameDirectionHelper.All;
+                    } else if (firstCheck)
+                    {
+                        favouredDirection = favouredDirection.Opposite();
+                    }
+
+                    firstCheck = false;
+
+                    if (IsEdge(pos.x, pos.z, w, h, 2)) roadComplete = true;
+
+                    if (sourceDirection != GameDirectionHelper.Nil) {
+                        foreach (GameDirection futureDirection in (~sourceDirection).ToList())
+                        {
+                            GridPos futurePos = pos.Adjacent(futureDirection);
+                            if (cells[futurePos.x, futurePos.z].cellType == CellTypeEnum.Road) roadComplete = true;
+                        }
+                    }
+
+                    sourceDirection = testDir.Opposite();
+                }
+            }
+        }
+
+        private static void RandomGrass(CellData[,] cells, int num, ref List<GridPos> validCells, ref HashSet<GridPos> validCellsHash)
+        {
+            for (int i = 0; i < num; i++)
+            {
+                if (validCells.Count == 0) return;
+                int rnd = Random.Range(0, validCells.Count);
+                GridPos pos = validCells[rnd];
+                validCells.RemoveAt(rnd);
+                validCellsHash.Remove(pos);
+                cells[pos.x, pos.z].cellType = CellTypeEnum.Grass;
+            }
         }
     }
 }

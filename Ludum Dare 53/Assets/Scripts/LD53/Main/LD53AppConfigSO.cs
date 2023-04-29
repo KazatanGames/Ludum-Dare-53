@@ -37,8 +37,10 @@ namespace KazatanGames.LD53
         public float grassChance = 0.35f;
         [Range(1f, 10f)]
         public float grassScale = 3.15f;
-        public int initialOffices = 10;
-        public int initialRoads = 10;
+        public int genOffices = 10;
+        public int genRoads = 10;
+        public int genGrass = 1;
+        public int genLoops = 8;
         public float roadStraightChance = 0.667f;
     }
 }

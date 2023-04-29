@@ -55,6 +55,46 @@
             return options[Random.Range(0, options.Count)];
         }
 
+        public static GameDirection RandomSinglePreferAdjacent(this GameDirection input, GameDirection direction)
+        {
+            List<GameDirection> options = new List<GameDirection>();
+            List<GameDirection> preferredOptions = new List<GameDirection>();
+            if (input.Test(GameDirection.North))
+            {
+                options.Add(GameDirection.North);
+                if (!GameDirection.North.Test(direction.Opposite())) {
+                    preferredOptions.Add(GameDirection.North);
+                }
+            }
+            if (input.Test(GameDirection.East))
+            {
+                options.Add(GameDirection.East);
+                if (!GameDirection.East.Test(direction.Opposite()))
+                {
+                    preferredOptions.Add(GameDirection.East);
+                }
+            }
+            if (input.Test(GameDirection.South))
+            {
+                options.Add(GameDirection.South);
+                if (!GameDirection.South.Test(direction.Opposite()))
+                {
+                    preferredOptions.Add(GameDirection.South);
+                }
+            }
+            if (input.Test(GameDirection.West))
+            {
+                options.Add(GameDirection.West);
+                if (!GameDirection.West.Test(direction.Opposite()))
+                {
+                    preferredOptions.Add(GameDirection.West);
+                }
+            }
+            if (preferredOptions.Count > 0) return preferredOptions[Random.Range(0, preferredOptions.Count)];
+            if (options.Count == 0) return GameDirectionHelper.Nil;
+            return options[Random.Range(0, options.Count)];
+        }
+
         public static int Count(this GameDirection input)
         {
             int total = 0;
