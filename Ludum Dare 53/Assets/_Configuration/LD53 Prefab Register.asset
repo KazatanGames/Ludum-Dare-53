@@ -9,7 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d7fd9488000d3734a9e00ee676215985, type: 3}
-  m_Name: Post Processing Volume Profile
+  m_Script: {fileID: 11500000, guid: ede1dca89ac5dd142bbe0b8a34e115a7, type: 3}
+  m_Name: LD53 Prefab Register
   m_EditorClassIdentifier: 
-  components: []
+  dronePrefab: {fileID: 1906077888258090652, guid: 0fdd9788eb5abb64d864be43668370f6,
+    type: 3}
