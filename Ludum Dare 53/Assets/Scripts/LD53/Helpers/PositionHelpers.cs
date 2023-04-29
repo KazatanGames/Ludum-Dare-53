@@ -23,5 +23,13 @@ namespace KazatanGames.LD53
                 (y * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize) + hg
             );
         }
+
+        public static Vector2Int WorldToGridPos(Vector3 worldPos)
+        {
+            return new(
+                Mathf.FloorToInt(worldPos.x / LD53AppManager.INSTANCE.AppConfig.playAreaGridSize),
+                Mathf.FloorToInt(worldPos.z / LD53AppManager.INSTANCE.AppConfig.playAreaGridSize)
+            );
+        }
     }
 }

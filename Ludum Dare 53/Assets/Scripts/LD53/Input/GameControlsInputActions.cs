@@ -46,15 +46,6 @@ namespace KazatanGames.LD53
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
-                },
-                {
-                    ""name"": ""Aiming"",
-                    ""type"": ""Value"",
-                    ""id"": ""e79bb0d5-496b-4c2b-a1d6-799c3e7b1353"",
-                    ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -81,9 +72,31 @@ namespace KazatanGames.LD53
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""up"",
+                    ""id"": ""52f4ac2e-d7e8-4c23-9001-f04de81477ea"",
+                    ""path"": ""<Keyboard>/upArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": ""down"",
                     ""id"": ""b079c758-b008-4e94-a985-1534725f951d"",
                     ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""1d9b64ff-963b-4486-be38-516d82ecd48e"",
+                    ""path"": ""<Keyboard>/downArrow"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard & Mouse"",
@@ -103,12 +116,89 @@ namespace KazatanGames.LD53
                     ""isPartOfComposite"": true
                 },
                 {
+                    ""name"": ""left"",
+                    ""id"": ""883c70da-2a12-4207-9659-014bc1e2d65e"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
                     ""name"": ""right"",
                     ""id"": ""a761f77f-4192-4740-866d-97311b62af74"",
                     ""path"": ""<Keyboard>/d"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""0df19afd-4b1f-47e2-8ffd-76d39b01e1df"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""2D Vector"",
+                    ""id"": ""9bda1187-4de9-4d81-8bbf-e5f1bbcc97a6"",
+                    ""path"": ""2DVector"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Movement"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""up"",
+                    ""id"": ""ce07ccf9-afc8-41c1-9392-515b8b736c6d"",
+                    ""path"": ""<Gamepad>/leftStick/up"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""down"",
+                    ""id"": ""bab5fd85-2766-421b-a1d0-5d875ea23075"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""left"",
+                    ""id"": ""0a8c1ef8-ad7f-4e58-bc59-01f4f4545147"",
+                    ""path"": ""<Gamepad>/leftStick/left"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Movement"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""right"",
+                    ""id"": ""fab36d8a-4016-4373-b371-f1a7b92e23b2"",
+                    ""path"": ""<Gamepad>/leftStick/right"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
                     ""action"": ""Movement"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
@@ -126,12 +216,56 @@ namespace KazatanGames.LD53
                 },
                 {
                     ""name"": """",
-                    ""id"": ""5ab98189-fd8a-4088-9771-8a40445a965d"",
-                    ""path"": ""<Mouse>/position"",
+                    ""id"": ""84595415-6623-4b74-bf82-e7c7f0fa2997"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard & Mouse"",
-                    ""action"": ""Aiming"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""540b1927-2117-4b6d-873f-6c2e14190238"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard & Mouse"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2a2fe978-598f-49ec-974a-ae5891f17346"",
+                    ""path"": ""<Gamepad>/rightShoulder"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7c76986f-c63a-4bb5-8979-2339dd0ca22a"",
+                    ""path"": ""<Gamepad>/rightTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Fire"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""46ac53b7-afd1-4b6e-a1bd-73e616b33668"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Gamepad"",
+                    ""action"": ""Fire"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -150,6 +284,17 @@ namespace KazatanGames.LD53
                 },
                 {
                     ""devicePath"": ""<Mouse>"",
+                    ""isOptional"": true,
+                    ""isOR"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""Gamepad"",
+            ""bindingGroup"": ""Gamepad"",
+            ""devices"": [
+                {
+                    ""devicePath"": ""<Gamepad>"",
                     ""isOptional"": false,
                     ""isOR"": false
                 }
@@ -161,7 +306,6 @@ namespace KazatanGames.LD53
             m_DroneFlying = asset.FindActionMap("Drone Flying", throwIfNotFound: true);
             m_DroneFlying_Movement = m_DroneFlying.FindAction("Movement", throwIfNotFound: true);
             m_DroneFlying_Fire = m_DroneFlying.FindAction("Fire", throwIfNotFound: true);
-            m_DroneFlying_Aiming = m_DroneFlying.FindAction("Aiming", throwIfNotFound: true);
         }
 
         public void Dispose()
@@ -223,14 +367,12 @@ namespace KazatanGames.LD53
         private IDroneFlyingActions m_DroneFlyingActionsCallbackInterface;
         private readonly InputAction m_DroneFlying_Movement;
         private readonly InputAction m_DroneFlying_Fire;
-        private readonly InputAction m_DroneFlying_Aiming;
         public struct DroneFlyingActions
         {
             private @GameControlsInputActions m_Wrapper;
             public DroneFlyingActions(@GameControlsInputActions wrapper) { m_Wrapper = wrapper; }
             public InputAction @Movement => m_Wrapper.m_DroneFlying_Movement;
             public InputAction @Fire => m_Wrapper.m_DroneFlying_Fire;
-            public InputAction @Aiming => m_Wrapper.m_DroneFlying_Aiming;
             public InputActionMap Get() { return m_Wrapper.m_DroneFlying; }
             public void Enable() { Get().Enable(); }
             public void Disable() { Get().Disable(); }
@@ -246,9 +388,6 @@ namespace KazatanGames.LD53
                     @Fire.started -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnFire;
                     @Fire.performed -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnFire;
                     @Fire.canceled -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnFire;
-                    @Aiming.started -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnAiming;
-                    @Aiming.performed -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnAiming;
-                    @Aiming.canceled -= m_Wrapper.m_DroneFlyingActionsCallbackInterface.OnAiming;
                 }
                 m_Wrapper.m_DroneFlyingActionsCallbackInterface = instance;
                 if (instance != null)
@@ -259,9 +398,6 @@ namespace KazatanGames.LD53
                     @Fire.started += instance.OnFire;
                     @Fire.performed += instance.OnFire;
                     @Fire.canceled += instance.OnFire;
-                    @Aiming.started += instance.OnAiming;
-                    @Aiming.performed += instance.OnAiming;
-                    @Aiming.canceled += instance.OnAiming;
                 }
             }
         }
@@ -275,11 +411,19 @@ namespace KazatanGames.LD53
                 return asset.controlSchemes[m_KeyboardMouseSchemeIndex];
             }
         }
+        private int m_GamepadSchemeIndex = -1;
+        public InputControlScheme GamepadScheme
+        {
+            get
+            {
+                if (m_GamepadSchemeIndex == -1) m_GamepadSchemeIndex = asset.FindControlSchemeIndex("Gamepad");
+                return asset.controlSchemes[m_GamepadSchemeIndex];
+            }
+        }
         public interface IDroneFlyingActions
         {
             void OnMovement(InputAction.CallbackContext context);
             void OnFire(InputAction.CallbackContext context);
-            void OnAiming(InputAction.CallbackContext context);
         }
     }
 }

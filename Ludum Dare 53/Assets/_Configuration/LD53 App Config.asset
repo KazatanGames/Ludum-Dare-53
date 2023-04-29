@@ -29,16 +29,21 @@ MonoBehaviour:
     sceneName: Scenes/GameScene
   prefabRegister: {fileID: 11400000, guid: 2941ab46b980ae141a743ff2e5ad3f46, type: 2}
   droneHeight: 30
-  droneDragCoeff: 4
-  maxDroneSpeed: 100
+  droneDragCoeff: 2
+  maxDroneSpeed: 17.5
   rotorRotationSpeed: 720
-  droneAcceleration: 75
+  droneAcceleration: 32.5
   rotorMaxLeanAngle: 25
-  droneMaxLeanAngle: 15
+  droneMaxLeanAngle: 25
   firePowerIncrease: 12
   maxFirePower: 10
-  parcelDropOffset: 2
-  aimArrowMaxScale: 3
+  fireDelay: 0.5
+  parcelDropOffset: 2.5
+  parcelYFireSpeed: -4
+  parcelTorqueMax: 50
+  cameraMinHeight: 15
+  cameraMaxHeight: 45
+  cameraHeightSmoothTime: 0.333333
   playAreaSize: {x: 32, y: 24}
   playAreaGridSize: 8
   grassChance: 0.5

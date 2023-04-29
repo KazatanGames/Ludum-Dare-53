@@ -1,5 +1,4 @@
 ﻿using KazatanGames.Framework;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -20,7 +19,7 @@ namespace KazatanGames.LD53
         [SerializeField]
         protected CinemachineVirtualCameraBase topDownCamera;
         [SerializeField]
-        protected Transform backingBlackQuad;
+        protected Transform floorQuad;
 
         [Header("Settings")]
         [SerializeField]
@@ -39,6 +38,9 @@ namespace KazatanGames.LD53
         // controllers
         protected DroneController droneController;
         protected List<OfficeBuildingController> officeBuildingControllers;
+
+        // events
+        public event System.Action OnBuilt;
 
         protected override void Initialise()
         {
@@ -205,16 +207,18 @@ namespace KazatanGames.LD53
                 }
             }
 
-            backingBlackQuad.transform.localScale = new(
-                (LD53AppManager.INSTANCE.AppConfig.playAreaSize.x + 20f) * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize,
-                (LD53AppManager.INSTANCE.AppConfig.playAreaSize.x + 20f) * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize,
+            floorQuad.transform.localScale = new(
+                LD53AppManager.INSTANCE.AppConfig.playAreaSize.x * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize,
+                LD53AppManager.INSTANCE.AppConfig.playAreaSize.y * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize,
                 1f
             );
-            backingBlackQuad.transform.localPosition = new(
+            floorQuad.transform.localPosition = new(
                 LD53AppManager.INSTANCE.AppConfig.playAreaSize.x * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize / 2f,
-                -0.01f,
+                0f,
                 LD53AppManager.INSTANCE.AppConfig.playAreaSize.y * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize / 2f
             );
+
+            OnBuilt?.Invoke();
         }
 
         protected T BuildComponentCell<T>(T prefab, int x, int z) where T : MonoBehaviour
@@ -235,22 +239,10 @@ namespace KazatanGames.LD53
         protected void DoInput()
         {
             Vector2 moveInput = controls.DroneFlying.Movement.ReadValue<Vector2>();
-            Vector2 aimInputRaw = controls.DroneFlying.Aiming.ReadValue<Vector2>();
 
             float heightAccel = 0f;
 
             GameModel.Current.dronePlayerAccel = new(LD53AppManager.INSTANCE.AppConfig.droneAcceleration * moveInput.x, heightAccel, LD53AppManager.INSTANCE.AppConfig.droneAcceleration * moveInput.y);
-
-            Ray r = Camera.main.ScreenPointToRay(aimInputRaw);
-            Vector2 aimInput = Vector2.zero;
-
-            if (p.Raycast(r, out float distance))
-            {
-                Vector3 aimPoint = r.GetPoint(distance);
-                aimInput = new Vector2(aimPoint.x, aimPoint.z);
-            }
-
-            GameModel.Current.aimInput = aimInput;
         }
 
         protected void Tick()
@@ -279,9 +271,16 @@ namespace KazatanGames.LD53
 
         protected void OnPlayerFire(Vector3 position, Vector3 velocity)
         {
+            if (droneController == null) return;
             ParcelController pc = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.parcelPrefab, container).GetComponent<ParcelController>();
             pc.transform.localPosition = position - new Vector3(0f, LD53AppManager.INSTANCE.AppConfig.parcelDropOffset, 0f);
+            pc.transform.localRotation = droneController.transform.localRotation;
             pc.body.AddForce(velocity, ForceMode.VelocityChange);
+            pc.body.AddTorque(
+                Random.Range(-LD53AppManager.INSTANCE.AppConfig.parcelTorqueMax, LD53AppManager.INSTANCE.AppConfig.parcelTorqueMax),
+                Random.Range(-LD53AppManager.INSTANCE.AppConfig.parcelTorqueMax, LD53AppManager.INSTANCE.AppConfig.parcelTorqueMax),
+                Random.Range(-LD53AppManager.INSTANCE.AppConfig.parcelTorqueMax, LD53AppManager.INSTANCE.AppConfig.parcelTorqueMax)
+            );
         }
     }
 }

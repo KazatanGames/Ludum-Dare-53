@@ -22,8 +22,7 @@ namespace KazatanGames.LD53
         public float droneSpeed;
         public bool playerFiring;
         public bool playerFired;
-        public float firePower;
-        public float firePowerRatio;
+        public float nextFire;
         public Vector2 aimInput;
 
         public CellData[,] cells;
@@ -39,39 +38,27 @@ namespace KazatanGames.LD53
             droneWindAccel = Vector3.zero;
             droneSpeed = 0;
             playerFiring = false;
-            firePower = 0;
-            firePowerRatio = 0;
             aimInput = Vector2.zero;
+            nextFire = 0f;
             cells = WorldGen.Generate(LD53AppManager.INSTANCE.AppConfig.playAreaSize.x, LD53AppManager.INSTANCE.AppConfig.playAreaSize.y);
         }
 
         public void Tick(float tickTime)
         {
+            if (nextFire > 0) nextFire -= tickTime;
             if (playerFired)
             {
                 if (!playerFiring) playerFired = false;
             }
             else
             {
-                Vector2 fireAngle = new(aimInput.x - dronePosition.x, aimInput.y - dronePosition.z);
-                if (playerFiring)
+                if (nextFire <= 0f && playerFiring)
                 {
-                    firePower += LD53AppManager.INSTANCE.AppConfig.firePowerIncrease * tickTime;
-                    if (firePower > LD53AppManager.INSTANCE.AppConfig.maxFirePower)
-                    {
-                        OnFire?.Invoke(dronePosition, new Vector3(fireAngle.normalized.x * firePower, LD53AppManager.INSTANCE.AppConfig.parcelYFireSpeed, fireAngle.normalized.y * firePower) + droneVelocity * LD53AppManager.INSTANCE.AppConfig.parcelDroneVelocityMulti);
-                        firePower = 0;
-                        playerFired = true;
-                    }
-                }
-                else if (firePower > 0)
-                {
-                    OnFire?.Invoke(dronePosition, new Vector3(fireAngle.normalized.x * firePower, LD53AppManager.INSTANCE.AppConfig.parcelYFireSpeed, fireAngle.normalized.y * firePower) + droneVelocity * LD53AppManager.INSTANCE.AppConfig.parcelDroneVelocityMulti);
-                    firePower = 0;
+                    OnFire?.Invoke(dronePosition, droneVelocity + new Vector3(0f, LD53AppManager.INSTANCE.AppConfig.parcelYFireSpeed, 0f));
                     playerFired = true;
+                    nextFire = LD53AppManager.INSTANCE.AppConfig.fireDelay;
                 }
             }
-            firePowerRatio = firePower / LD53AppManager.INSTANCE.AppConfig.maxFirePower;
         }
 
         public void Frame(float frameTime)

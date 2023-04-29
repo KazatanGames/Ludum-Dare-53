@@ -32,13 +32,13 @@ namespace KazatanGames.LD53
         public float droneMaxLeanAngle = 15f;
         public float firePowerIncrease = 5f;
         public float maxFirePower = 10f;
+        public float fireDelay = 0.25f;
         public float parcelDropOffset = 2f;
         public float parcelYFireSpeed = -2f;
-        public float parcelDroneVelocityMulti = 0.25f;
-        public float aimArrowMinScaleX = 1f;
-        public float aimArrowMaxScaleX = 2f;
-        public float aimArrowMinScaleZ = 1f;
-        public float aimArrowMaxScaleZ = 3f;
+        public float parcelTorqueMax = 0.1f;
+        public float cameraMinHeight = 15f;
+        public float cameraMaxHeight = 45f;
+        public float cameraHeightSmoothTime = 0.5f;
 
         [Header("Generation")]
         public Vector2Int playAreaSize = new(128, 128);
