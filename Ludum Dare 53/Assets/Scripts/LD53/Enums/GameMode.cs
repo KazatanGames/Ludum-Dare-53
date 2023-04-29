@@ -12,10 +12,9 @@ using UnityEngine;
  */
 namespace KazatanGames.LD53
 {
-    public class CellData
+    public enum GameMode : byte
     {
-        public GridPos pos;
-        public CellTypeEnum cellType;
-        public bool targetHuntTarget;
+        Eternal,
+        TargetHunt
     }
 }

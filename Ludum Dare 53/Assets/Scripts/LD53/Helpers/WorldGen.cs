@@ -76,6 +76,8 @@ namespace KazatanGames.LD53
                 RandomGrass(cells, LD53AppManager.INSTANCE.AppConfig.genGrass, ref validCells, ref validCellsHash);
             }
 
+            GenerateTargetHuntTargets(cells, w, h);
+
             return cells;
         }
 
@@ -166,6 +168,48 @@ namespace KazatanGames.LD53
                 validCells.RemoveAt(rnd);
                 validCellsHash.Remove(pos);
                 cells[pos.x, pos.z].cellType = CellTypeEnum.Grass;
+            }
+        }
+
+        private static void GenerateTargetHuntTargets(CellData[,] cells, int w, int h)
+        {
+            int totalGridSquares = LD53AppManager.INSTANCE.AppConfig.targetSpreadColumns * LD53AppManager.INSTANCE.AppConfig.targetSpreadRows;
+            int gridSquareWidth = w / LD53AppManager.INSTANCE.AppConfig.targetSpreadColumns;
+            int gridSquareHeight = h / LD53AppManager.INSTANCE.AppConfig.targetSpreadRows;
+            int targetsPerGridSquare = LD53AppManager.INSTANCE.AppConfig.targetsToHunt / totalGridSquares;
+            int remainderTargets = LD53AppManager.INSTANCE.AppConfig.targetsToHunt - (targetsPerGridSquare * totalGridSquares);
+
+            HashSet<GridPos> validCells = new();
+            for (int x = 0; x < w; x++)
+            {
+                for (int y = 0; y < h; y++)
+                {
+                    if(!IsEdge(x, y, w, h)) validCells.Add(new(x, y));
+                }
+            }
+
+            for (int gX = 0; gX < LD53AppManager.INSTANCE.AppConfig.targetSpreadColumns; gX++)
+            {
+                for (int gY = 0; gY < LD53AppManager.INSTANCE.AppConfig.targetSpreadRows; gY++)
+                {
+                    bool invalidCell = true;
+                    int gXOffset = gX * gridSquareWidth;
+                    int gYOffset = gY * gridSquareHeight;
+                    int cellsToFind = targetsPerGridSquare;
+                    while (invalidCell || cellsToFind > 0)
+                    {
+                        GridPos candidate = new(gXOffset + Random.Range(0, gridSquareWidth), gYOffset + Random.Range(0, gridSquareHeight));
+                        if (validCells.Contains(candidate))
+                        {
+                            invalidCell = false;
+                            cellsToFind--;
+                            cells[candidate.x, candidate.z].targetHuntTarget = true;
+                        } else
+                        {
+                            invalidCell = true;
+                        }
+                    }
+                }
             }
         }
     }

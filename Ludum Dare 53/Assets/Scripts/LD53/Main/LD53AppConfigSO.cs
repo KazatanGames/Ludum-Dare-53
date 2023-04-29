@@ -39,6 +39,7 @@ namespace KazatanGames.LD53
         public float cameraMinHeight = 15f;
         public float cameraMaxHeight = 45f;
         public float cameraHeightSmoothTime = 0.5f;
+        public int targetsToHunt = 100;
 
         [Header("Generation")]
         public Vector2Int playAreaSize = new(128, 128);
@@ -51,5 +52,7 @@ namespace KazatanGames.LD53
         public int genGrass = 1;
         public int genLoops = 8;
         public float roadStraightChance = 0.667f;
+        public int targetSpreadColumns = 4;
+        public int targetSpreadRows = 3;
     }
 }

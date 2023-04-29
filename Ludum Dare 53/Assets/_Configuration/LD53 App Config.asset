@@ -44,6 +44,7 @@ MonoBehaviour:
   cameraMinHeight: 15
   cameraMaxHeight: 45
   cameraHeightSmoothTime: 0.333333
+  targetsToHunt: 50
   playAreaSize: {x: 32, y: 24}
   playAreaGridSize: 8
   grassChance: 0.5
@@ -53,3 +54,5 @@ MonoBehaviour:
   genGrass: 1
   genLoops: 12
   roadStraightChance: 0.8
+  targetSpreadColumns: 4
+  targetSpreadRows: 3

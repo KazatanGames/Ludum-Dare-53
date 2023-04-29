@@ -12,10 +12,8 @@ using UnityEngine;
  */
 namespace KazatanGames.LD53
 {
-    public class CellData
+    public class CommonData
     {
-        public GridPos pos;
-        public CellTypeEnum cellType;
-        public bool targetHuntTarget;
+        public GameMode chosenGameMode = GameMode.TargetHunt;
     }
 }

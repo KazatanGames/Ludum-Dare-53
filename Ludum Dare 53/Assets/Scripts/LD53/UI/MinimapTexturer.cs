@@ -29,6 +29,8 @@ namespace KazatanGames.LD53
         protected Color roadColor = Color.black;
         [SerializeField]
         protected Color droneColor = Color.magenta;
+        [SerializeField]
+        protected Color targetColor = Color.yellow;
 
         protected float timePerUpdate;
         protected float timeBank;
@@ -66,12 +68,17 @@ namespace KazatanGames.LD53
                     Vector2Int here = new(x, y);
                     Color c = Color.magenta;
 
+                    CellData cell = GameModel.Current.cells[x, y];
+
                     if (Equals(here, PositionHelpers.WorldToGridPos(GameModel.Current.dronePosition)))
                     {
                         c = droneColor;
+                    } else if (cell.targetHuntTarget)
+                    {
+                        c = targetColor;
                     } else
                     {
-                        switch (GameModel.Current.cells[x, y].cellType)
+                        switch (cell.cellType)
                         {
                             case CellTypeEnum.Road:
                                 c = roadColor;
