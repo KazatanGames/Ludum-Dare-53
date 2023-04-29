@@ -9,7 +9,7 @@ using Unity.Mathematics;
  *
  * © Kazatan Games Ltd, 2023
  */
-namespace KazatanGames.PewPewPew2023
+namespace KazatanGames.Framework
 {
     public class Simple2DNoise : INoiseProvider
     {

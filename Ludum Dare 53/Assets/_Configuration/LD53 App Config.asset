@@ -28,10 +28,14 @@ MonoBehaviour:
     sceneAsset: {fileID: 102900000, guid: 384d161e824bc604881550bb7620e96d, type: 3}
     sceneName: Scenes/GameScene
   prefabRegister: {fileID: 11400000, guid: 2941ab46b980ae141a743ff2e5ad3f46, type: 2}
-  droneStartPosition: {x: 0, y: 50, z: 0}
+  droneHeight: 30
   droneDragCoeff: 4
   maxDroneSpeed: 100
   rotorRotationSpeed: 720
   droneAcceleration: 75
   rotorMaxLeanAngle: 25
   droneMaxLeanAngle: 15
+  playAreaSize: {x: 32, y: 24}
+  playAreaGridSize: 8
+  grassChance: 0.25
+  grassScale: 3.42

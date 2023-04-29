@@ -16,8 +16,20 @@ namespace KazatanGames.LD53
     [CreateAssetMenu(fileName = "LD53 Prefab Register", menuName = "LD53/Prefab Register", order = 99999)]
     public class PrefabRegisterSO : ScriptableObject
     {
-        public Transform dronePrefab;
-        public Transform officeBuilding;
+        [Header("Player")]
+        public DroneController dronePrefab;
+
+        [Header("Cell Types")]
+        public OfficeBuildingController officeBuilding;
+        public Transform roadStraight;
+        public Transform roadCorner;
+        public Transform roadTJunc;
+        public Transform roadXJunc;
+        public Transform roadDeadEnd;
+        public Transform concreteGround;
+        public Transform grassGround;
+
+        [Header("Office Building")]
         public Transform officeBuildingTop;
         public Transform officeBuildingFloor;
     }

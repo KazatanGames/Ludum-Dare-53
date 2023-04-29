@@ -18,6 +18,8 @@ namespace KazatanGames.LD53
         [Header("In Scene")]
         [SerializeField]
         protected CinemachineVirtualCameraBase topDownCamera;
+        [SerializeField]
+        protected Transform backingBlackQuad;
 
         [Header("Settings")]
         [SerializeField]
@@ -30,9 +32,11 @@ namespace KazatanGames.LD53
         protected bool pausedForStart;
         protected int tick;
         protected GameControlsInputActions controls;
+        protected Transform container;
 
         // controllers
         protected DroneController droneController;
+        protected List<OfficeBuildingController> officeBuildingControllers;
 
         protected override void Initialise()
         {
@@ -68,19 +72,149 @@ namespace KazatanGames.LD53
 
         protected void Reset()
         {
+            officeBuildingControllers = new();
             timeBank = 0f;
             frameTime = 1f / simulationFps;
             pausedForStart = false;
             tick = 0;
+
+            if (container != null) Destroy(container.gameObject);
+
             GameModel.Current.Reset();
         }
 
         protected void Build()
         {
-            droneController = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.dronePrefab, transform).GetComponent<DroneController>();
+            if (droneController == null)
+            {
+                droneController = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.dronePrefab, transform).GetComponent<DroneController>();
+                topDownCamera.Follow = droneController.transform;
+                topDownCamera.LookAt = droneController.transform;
+            }
 
-            topDownCamera.Follow = droneController.transform;
-            topDownCamera.LookAt = droneController.transform;
+            container = new GameObject("Game World Container").transform;
+            container.parent = transform;
+
+            for (int x = 0; x < LD53AppManager.INSTANCE.AppConfig.playAreaSize.x; x++)
+            {
+                for (int z = 0; z < LD53AppManager.INSTANCE.AppConfig.playAreaSize.y; z++)
+                {
+                    CellData cell = GameModel.Current.cells[x, z];
+                    switch (cell.cellType)
+                    {
+                        case CellTypeEnum.Office:
+                            BuildComponentCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.officeBuilding, x, z);
+                            break;
+                        case CellTypeEnum.Concrete:
+                            BuildSimpleCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.concreteGround, x, z);
+                            break;
+                        case CellTypeEnum.Grass:
+                            BuildSimpleCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.grassGround, x, z);
+                            break;
+                        case CellTypeEnum.Road:
+                            GameDirection otherRoads = GameDirectionHelper.Nil;
+                            if (x > 0 && GameModel.Current.cells[x - 1, z].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.West;
+                            if (z > 0 && GameModel.Current.cells[x, z - 1].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.South;
+                            if (x < LD53AppManager.INSTANCE.AppConfig.playAreaSize.x - 1 && GameModel.Current.cells[x + 1, z].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.East;
+                            if (z < LD53AppManager.INSTANCE.AppConfig.playAreaSize.y - 1 && GameModel.Current.cells[x, z + 1].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.North;
+
+                            if (otherRoads == GameDirectionHelper.All)
+                            {
+                                // x junc
+                                BuildSimpleCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.roadXJunc, x, z);
+                            } else if (otherRoads.Count() == 3)
+                            {
+                                // t junc
+                                float rotation = 0f;
+                                if (!otherRoads.Test(GameDirection.South))
+                                {
+                                    rotation = 270f;
+                                } else if (!otherRoads.Test(GameDirection.East))
+                                {
+                                    rotation = 180f;
+                                } else if (!otherRoads.Test(GameDirection.North))
+                                {
+                                    rotation = 90f;
+                                }
+                                BuildSimpleCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.roadTJunc, x, z, rotation);
+                            } else if (otherRoads.Test(GameDirection.East | GameDirection.West) || otherRoads.Test(GameDirection.North | GameDirection.South))
+                            {
+                                // straight
+                                float rotation = 0f;
+                                if (!otherRoads.Test(GameDirection.North))
+                                {
+                                    rotation = 90f;
+                                }
+                                BuildSimpleCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.roadStraight, x, z, rotation);
+                            } else if (otherRoads.Count() == 2)
+                            {
+                                // corner
+                                float rotation = 0f;
+                                if (otherRoads.Test(GameDirection.West | GameDirection.North))
+                                {
+                                    rotation = 270f;
+                                }
+                                else if (otherRoads.Test(GameDirection.South | GameDirection.West))
+                                {
+                                    rotation = 180f;
+                                }
+                                else if (otherRoads.Test(GameDirection.East | GameDirection.South))
+                                {
+                                    rotation = 90f;
+                                }
+                                BuildSimpleCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.roadCorner, x, z, rotation);
+                            } else if (otherRoads.Count() == 1)
+                            {
+                                // deadend
+                                float rotation = 0f;
+                                if (otherRoads.Test(GameDirection.East))
+                                {
+                                    rotation = 270f;
+                                }
+                                else if (otherRoads.Test(GameDirection.North))
+                                {
+                                    rotation = 180f;
+                                }
+                                else if (otherRoads.Test(GameDirection.West))
+                                {
+                                    rotation = 90f;
+                                }
+                                BuildSimpleCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.roadDeadEnd, x, z, rotation);
+                            } else
+                            {
+                                // fallback to concrete
+                                BuildSimpleCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.concreteGround, x, z);
+                            }
+                            break;
+                    }
+                }
+            }
+
+            backingBlackQuad.transform.localScale = new(
+                (LD53AppManager.INSTANCE.AppConfig.playAreaSize.x + 20f) * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize,
+                (LD53AppManager.INSTANCE.AppConfig.playAreaSize.x + 20f) * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize,
+                1f
+            );
+            backingBlackQuad.transform.localPosition = new(
+                LD53AppManager.INSTANCE.AppConfig.playAreaSize.x * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize / 2f,
+                -0.01f,
+                LD53AppManager.INSTANCE.AppConfig.playAreaSize.y * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize / 2f
+            );
+        }
+
+        protected T BuildComponentCell<T>(T prefab, int x, int z) where T : MonoBehaviour
+        {
+            T cell = Instantiate(prefab, container).GetComponent<T>();
+            cell.transform.localPosition = PositionHelpers.CenterOfGridPosInWorld(x, z);
+            return cell;
+        }
+
+        protected Transform BuildSimpleCell(Transform prefab, int x, int z, float rotationY = 0f)
+        {
+            Transform cell = Instantiate(prefab, container);
+            cell.localPosition = PositionHelpers.CenterOfGridPosInWorld(x, z);
+            cell.Rotate(Vector3.up, rotationY);
+            return cell;
         }
 
         protected void DoInput()
@@ -99,5 +233,11 @@ namespace KazatanGames.LD53
         }
 
         public bool IsPaused => pausedForStart;
+
+        public void RestartClicked()
+        {
+            Reset();
+            Build();
+        }
     }
 }

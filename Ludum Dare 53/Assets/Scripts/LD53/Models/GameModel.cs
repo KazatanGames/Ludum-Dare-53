@@ -21,14 +21,17 @@ namespace KazatanGames.LD53
         public Vector3 droneWindAccel;
         public float droneSpeed;
 
+        public CellData[,] cells;
+
         public void Reset()
         {
-            dronePosition = LD53AppManager.INSTANCE.AppConfig.droneStartPosition;
+            dronePosition = new((LD53AppManager.INSTANCE.AppConfig.playAreaSize.x * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize) / 2f, LD53AppManager.INSTANCE.AppConfig.droneHeight, (LD53AppManager.INSTANCE.AppConfig.playAreaSize.y * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize) / 2f);
             droneVelocity = Vector3.zero;
             droneAcceleration = Vector3.zero;
             dronePlayerAccel = Vector3.zero;
             droneWindAccel = Vector3.zero;
             droneSpeed = 0;
+            cells = WorldGen.Generate(LD53AppManager.INSTANCE.AppConfig.playAreaSize.x, LD53AppManager.INSTANCE.AppConfig.playAreaSize.y);
         }
 
         public void Tick(float tickTime)

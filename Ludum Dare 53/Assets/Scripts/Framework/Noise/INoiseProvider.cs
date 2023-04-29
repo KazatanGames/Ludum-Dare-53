@@ -8,7 +8,7 @@ using UnityEngine;
  *
  * © Kazatan Games Ltd, 2023
  */
-namespace KazatanGames.PewPewPew2023
+namespace KazatanGames.Framework
 {
     public interface INoiseProvider
     {

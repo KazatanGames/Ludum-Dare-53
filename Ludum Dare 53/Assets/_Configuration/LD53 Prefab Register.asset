@@ -12,9 +12,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede1dca89ac5dd142bbe0b8a34e115a7, type: 3}
   m_Name: LD53 Prefab Register
   m_EditorClassIdentifier: 
-  dronePrefab: {fileID: 1906077888258090652, guid: 0fdd9788eb5abb64d864be43668370f6,
+  dronePrefab: {fileID: 1906077888258090653, guid: 0fdd9788eb5abb64d864be43668370f6,
     type: 3}
-  officeBuilding: {fileID: 2045254043733930402, guid: f714b6972fb9d4a4fadab9d5eaabd6ac,
+  officeBuilding: {fileID: 2045254043733930403, guid: f714b6972fb9d4a4fadab9d5eaabd6ac,
+    type: 3}
+  roadStraight: {fileID: 4046041242787693400, guid: 6b6f27efcf1567247986ba136dcf018b,
+    type: 3}
+  roadCorner: {fileID: 4046041242787693400, guid: 76b3884481f10a64287fa9ece6c6ff8f,
+    type: 3}
+  roadTJunc: {fileID: 4046041242787693400, guid: 5f698ed3498132d438fa3164ff699ee0,
+    type: 3}
+  roadXJunc: {fileID: 4046041242787693400, guid: 7ab1d88c86dde924aa4bc31e1c5cbf7f,
+    type: 3}
+  roadDeadEnd: {fileID: 4046041242787693400, guid: 3f8b84acdf9ba7846ac596d6a8d542fd,
+    type: 3}
+  concreteGround: {fileID: 4046041242787693400, guid: e684111471793bc4288cff13f2b06d5d,
+    type: 3}
+  grassGround: {fileID: 4046041242787693400, guid: 838af5b308c9d144cbfe76268bb5b70d,
     type: 3}
   officeBuildingTop: {fileID: 7021589638943258738, guid: d9130a8de251c654ca47128f653f70b7,
     type: 3}
