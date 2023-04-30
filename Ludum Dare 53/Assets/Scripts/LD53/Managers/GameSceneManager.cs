@@ -34,6 +34,7 @@ namespace KazatanGames.LD53
         protected float timeBank;
         protected float frameTime;
         protected bool pausedForStart;
+        protected bool pausedForEnd;
         protected int tick;
         protected GameControlsInputActions controls;
         protected Transform container;
@@ -57,6 +58,8 @@ namespace KazatanGames.LD53
 
             Reset();
             Build();
+
+            GameModel.Current.OnGameOver += OnGameOver;
         }
 
         private void Start()
@@ -67,6 +70,7 @@ namespace KazatanGames.LD53
         private void OnDestroy()
         {
             GameplayEnd();
+            GameModel.Current.OnGameOver -= OnGameOver;
         }
 
         private void Update()
@@ -77,14 +81,19 @@ namespace KazatanGames.LD53
                 return;
             }
 
-            DoInput();
-
-            timeBank += Time.deltaTime;
-
-            while(timeBank >= frameTime)
+            if (!pausedForEnd)
             {
-                Tick();
-                timeBank -= frameTime;
+
+                DoInput();
+
+                timeBank += Time.deltaTime;
+
+                while (timeBank >= frameTime)
+                {
+                    Tick();
+                    timeBank -= frameTime;
+                }
+
             }
 
             GameModel.Current.Frame(Time.deltaTime);
@@ -94,6 +103,13 @@ namespace KazatanGames.LD53
         {
             countdown = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.countdown, canvas).GetComponent<CountdownPanel>();
             countdown.OnGo += GameplayStart;
+        }
+
+        protected void OnGameOver()
+        {
+            pausedForEnd = true;
+            GameplayEnd();
+            Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.gameOver, canvas);
         }
 
         protected void GameplayStart()
@@ -124,6 +140,7 @@ namespace KazatanGames.LD53
             timeBank = 0f;
             frameTime = 1f / simulationFps;
             pausedForStart = true;
+            pausedForEnd = false;
             tick = 0;
 
             if (container != null) Destroy(container.gameObject);
@@ -311,7 +328,7 @@ namespace KazatanGames.LD53
             GameModel.Current.Tick(frameTime);
         }
 
-        public bool IsPaused => pausedForStart;
+        public bool IsPaused => pausedForStart || pausedForEnd;
 
         public void RestartGame()
         {

@@ -13,6 +13,8 @@ namespace KazatanGames.LD53
 {
     public static class WorldGen
     {
+        public static int TargetsGeneratedLastGeneration = 0;
+
         public static CellData[,] Generate(int w, int h)
         {
             CellData[,] cells = new CellData[w, h];
@@ -189,6 +191,8 @@ namespace KazatanGames.LD53
             int targetsPerGridSquare = LD53AppManager.INSTANCE.AppConfig.targetsToHunt / totalGridSquares;
             int remainderTargets = LD53AppManager.INSTANCE.AppConfig.targetsToHunt - (targetsPerGridSquare * totalGridSquares);
 
+            TargetsGeneratedLastGeneration = 0;
+
             HashSet <GridPos> validCells = new();
             for (int x = 0; x < w; x++)
             {
@@ -206,7 +210,7 @@ namespace KazatanGames.LD53
                     int gXOffset = gX * gridSquareWidth;
                     int gYOffset = gY * gridSquareHeight;
                     int cellsToFind = targetsPerGridSquare;
-                    while (invalidCell || cellsToFind > 0)
+                    while ((invalidCell || cellsToFind > 0) && TargetsGeneratedLastGeneration < LD53AppManager.INSTANCE.AppConfig.targetsToHunt)
                     {
                         GridPos candidate = new(gXOffset + Random.Range(0, gridSquareWidth), gYOffset + Random.Range(0, gridSquareHeight));
                         if (validCells.Contains(candidate))
@@ -214,6 +218,7 @@ namespace KazatanGames.LD53
                             invalidCell = false;
                             cellsToFind--;
                             cells[candidate.x, candidate.z].targetHuntTarget = true;
+                            TargetsGeneratedLastGeneration++;
                         } else
                         {
                             invalidCell = true;

@@ -38,3 +38,5 @@ MonoBehaviour:
     type: 3}
   countdown: {fileID: 3248854677911760572, guid: ed6431f391498fe45baa38d11010db51,
     type: 3}
+  gameOver: {fileID: -5853886242001544591, guid: 335a6c155b3c96a47885d4485555549f,
+    type: 3}

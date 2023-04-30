@@ -38,5 +38,6 @@ namespace KazatanGames.LD53
 
         [Header("UI")]
         public CountdownPanel countdown;
+        public GameoverPanel gameOver;
     }
 }

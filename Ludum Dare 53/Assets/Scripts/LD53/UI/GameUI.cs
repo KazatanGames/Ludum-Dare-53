@@ -18,6 +18,8 @@ namespace KazatanGames.LD53
     {
         [SerializeField]
         protected TextMeshProUGUI timerTxt;
+        [SerializeField]
+        protected TextMeshProUGUI progressTxt;
 
         private void Update()
         {
@@ -28,6 +30,8 @@ namespace KazatanGames.LD53
                 int remMsecs = Mathf.FloorToInt(GameModel.Current.gameTime * 1000) % 1000;
 
                 timerTxt.SetText($"{mins:D2}:{remSecs:D2}:{remMsecs:D3}");
+
+                progressTxt.SetText($"{GameModel.Current.gameScore:D2} / {WorldGen.TargetsGeneratedLastGeneration:D2}");
             }
             else if (LD53AppManager.INSTANCE.Common.chosenGameMode == GameMode.TargetHunt)
             {

@@ -33,6 +33,7 @@ namespace KazatanGames.LD53
 
         public event Action<Vector3, Vector3> OnFire;
         public event Action OnReset;
+        public event Action OnGameOver;
 
         public void Reset()
         {
@@ -99,6 +100,11 @@ namespace KazatanGames.LD53
             {
                 cells[pos.x, pos.z].targetHuntTarget = false;
                 gameScore++;
+
+                if (gameScore >= WorldGen.TargetsGeneratedLastGeneration)
+                {
+                    OnGameOver?.Invoke();
+                }
             } else
             {
                 // TODO: time attack

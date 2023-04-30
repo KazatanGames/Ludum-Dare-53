@@ -48,7 +48,7 @@ namespace KazatanGames.LD53
         private void LateUpdate()
         {
             offsetHeight = Mathf.SmoothDamp(offsetHeight, targetOffsetHeight, ref heightVelocity, LD53AppManager.INSTANCE.AppConfig.cameraHeightSmoothTime);
-            virtualCamBase.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = new(0f, offsetHeight, 0f);
+            virtualCamBase.GetCinemachineComponent<CinemachineTransposer>().m_FollowOffset = new(0, offsetHeight, 0);
         }
     }
 }

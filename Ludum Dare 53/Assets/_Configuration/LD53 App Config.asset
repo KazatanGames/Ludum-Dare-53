@@ -53,5 +53,7 @@ MonoBehaviour:
   genGrass: 1
   genLoops: 12
   roadStraightChance: 0.8
-  targetSpreadColumns: 4
-  targetSpreadRows: 3
+  targetSpreadColumns: 5
+  targetSpreadRows: 5
+  minOfficeFloors: 2
+  maxOfficeFloors: 12
