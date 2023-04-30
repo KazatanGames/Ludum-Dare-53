@@ -16,7 +16,11 @@ MonoBehaviour:
     type: 3}
   parcelPrefab: {fileID: 5470553440283873857, guid: 163ed27bd9ba7594ca9f31d5ca4db619,
     type: 3}
+  parcelDestroyPrefab: {fileID: 5144564829715363802, guid: 56a8ca6f5b41b55468e40a23da29e28b,
+    type: 3}
   targetPrefab: {fileID: 8623270408270038405, guid: bf9becb71d8baf1458d17ee9c6d4e6d3,
+    type: 3}
+  targetHitPrefab: {fileID: 5144564829715363802, guid: 94ab8bdd4988ef9469cfce02a2e589a7,
     type: 3}
   officeBuilding: {fileID: 2045254043733930403, guid: f714b6972fb9d4a4fadab9d5eaabd6ac,
     type: 3}

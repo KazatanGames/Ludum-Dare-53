@@ -46,11 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18d8f83d21c7fcc48a51d5205577f682, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  distanceDisableTransform: {fileID: 5837712605598611573}
   physicsCollider: {fileID: 6901424894979998187}
   officeTop: {fileID: 5837712605598611573}
-  minFloors: 5
-  maxFloors: 10
-  floorSpacing: 2
 --- !u!65 &6901424894979998187
 BoxCollider:
   m_ObjectHideFlags: 0

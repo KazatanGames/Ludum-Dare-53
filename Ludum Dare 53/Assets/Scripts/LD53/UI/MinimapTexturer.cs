@@ -70,7 +70,7 @@ namespace KazatanGames.LD53
                     Vector2Int here = new(x, y);
                     Color c = Color.magenta;
 
-                    CellData cell = GameModel.Current.cells[x, y];
+                    CellData cell = GameModel.Current.world.cells[x, y];
 
                     if (Equals(here, PositionHelpers.WorldToGridPos(GameModel.Current.dronePosition)))
                     {

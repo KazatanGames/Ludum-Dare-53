@@ -35,6 +35,13 @@ namespace KazatanGames.LD53
         [SerializeField]
         protected float rangeSml = 4f;
 
+        [SerializeField]
+        protected float outTime = 0.25f;
+        [SerializeField]
+        protected float outTimePre = 0.1f;
+        [SerializeField]
+        protected float scaleUp = 1.25f;
+
         protected float bigAccum = 0f;
         protected float medAccum = 0f;
         protected float smlAccum = 0f;
@@ -45,8 +52,19 @@ namespace KazatanGames.LD53
         protected bool medDirection = true;
         protected bool smlDirection = true;
 
+        protected bool outMode = false;
+
+        protected float outTimeAccum;
+        protected Vector3 outOrigScale;
+
         private void Update()
         {
+            if (outMode)
+            {
+                PlayOut();
+                return;
+            }
+
             bigAccum += Time.deltaTime * (bigDirection ? 1 : -1);
             medAccum += Time.deltaTime * (medDirection ? 1 : -1);
             smlAccum += Time.deltaTime * (smlDirection ? 1 : -1);
@@ -81,6 +99,8 @@ namespace KazatanGames.LD53
                 smlAccum = -smlAccum;
             }
 
+            if (!isEnabled) return;
+
             float bigRatio = Easing.Quadratic.InOut(bigAccum / bigTime);
             float medRatio = Easing.Quartic.InOut(medAccum / medTime);
             float smlRatio = Easing.Quadratic.InOut(smlAccum / smlTime);
@@ -94,9 +114,31 @@ namespace KazatanGames.LD53
         {
             if (other.gameObject.tag == "parcel")
             {
+                Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.targetHitPrefab, transform.localPosition, Quaternion.identity, transform.parent);
+
                 GameModel.Current.TargetHit(pos);
 
                 Destroy(other.gameObject);
+                GetComponent<BoxCollider>().enabled = false;
+                outMode = true;
+                outTimeAccum = 0f;
+                outOrigScale = transform.localScale;
+            }
+        }
+
+        protected void PlayOut()
+        {
+            outTimeAccum += Time.deltaTime;
+            if (outTimeAccum < outTimePre)
+            {
+                float preRatio = outTimeAccum / outTimePre;
+                transform.localScale = Vector3.Lerp(outOrigScale, outOrigScale * scaleUp, preRatio);
+            } else if (outTimeAccum < outTime)
+            {
+                float ratio = (outTimeAccum - outTimePre) / (outTime - outTimePre);
+                transform.localScale = Vector3.Lerp(outOrigScale * scaleUp, Vector3.zero, ratio);
+            } else
+            {
                 Destroy(gameObject);
             }
         }

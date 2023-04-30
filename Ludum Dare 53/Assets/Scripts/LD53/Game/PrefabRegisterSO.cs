@@ -21,9 +21,11 @@ namespace KazatanGames.LD53
 
         [Header("Parcel")]
         public ParcelController parcelPrefab;
+        public Transform parcelDestroyPrefab;
 
         [Header("Target")]
         public TargetController targetPrefab;
+        public Transform targetHitPrefab;
 
         [Header("Cell Types")]
         public OfficeBuildingController officeBuilding;

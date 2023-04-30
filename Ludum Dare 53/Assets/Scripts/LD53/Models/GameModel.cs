@@ -29,7 +29,7 @@ namespace KazatanGames.LD53
         public float introTime;
         public float introRatio;
 
-        public CellData[,] cells;
+        public WorldData world;
 
         public event Action<Vector3, Vector3> OnFire;
         public event Action OnReset;
@@ -50,7 +50,7 @@ namespace KazatanGames.LD53
             playerFiring = false;
             aimInput = Vector2.zero;
             nextFire = 0f;
-            cells = WorldGen.Generate(LD53AppManager.INSTANCE.AppConfig.playAreaSize.x, LD53AppManager.INSTANCE.AppConfig.playAreaSize.y);
+            world = WorldGen.Generate(LD53AppManager.INSTANCE.AppConfig.playAreaSize.x, LD53AppManager.INSTANCE.AppConfig.playAreaSize.y);
             gameTime = 0f;
             gameScore = 0;
             introTime = 0f;
@@ -98,10 +98,10 @@ namespace KazatanGames.LD53
         {
             if (LD53AppManager.INSTANCE.Common.chosenGameMode == GameMode.TargetHunt)
             {
-                cells[pos.x, pos.z].targetHuntTarget = false;
+                world.cells[pos.x, pos.z].targetHuntTarget = false;
                 gameScore++;
 
-                if (gameScore >= WorldGen.TargetsGeneratedLastGeneration)
+                if (gameScore >= world.targetCount)
                 {
                     OnGameOver?.Invoke();
                 }
@@ -123,6 +123,35 @@ namespace KazatanGames.LD53
             Vector3 drag = newDroneVelocity * LD53AppManager.INSTANCE.AppConfig.droneDragCoeff;
             newDroneVelocity -= drag * frameTime;
 
+            // movement
+            newDronePosition += newDroneVelocity * frameTime;
+
+            // checks
+            if (newDronePosition.x < 0)
+            {
+                newDronePosition.x = -newDronePosition.x;
+                newDroneVelocity.x = -newDroneVelocity.x * LD53AppManager.INSTANCE.AppConfig.droneWallBound;
+            }
+            if (newDronePosition.z < 0)
+            {
+                newDronePosition.z = -newDronePosition.z;
+                newDroneVelocity.z = -newDroneVelocity.z * LD53AppManager.INSTANCE.AppConfig.droneWallBound;
+            }
+
+            float maxX = LD53AppManager.INSTANCE.AppConfig.playAreaGridSize * LD53AppManager.INSTANCE.AppConfig.playAreaSize.x;
+            float maxY = LD53AppManager.INSTANCE.AppConfig.playAreaGridSize * LD53AppManager.INSTANCE.AppConfig.playAreaSize.y;
+
+            if (newDronePosition.x > maxX)
+            {
+                newDronePosition.x = maxX - (newDronePosition.x - maxX);
+                newDroneVelocity.x = -newDroneVelocity.x * LD53AppManager.INSTANCE.AppConfig.droneWallBound;
+            }
+            if (newDronePosition.z > maxY)
+            {
+                newDronePosition.z = maxY - (newDronePosition.z - maxY);
+                newDroneVelocity.z = -newDroneVelocity.z * LD53AppManager.INSTANCE.AppConfig.droneWallBound;
+            }
+
             // calc new speed
             float newDroneSpeed = newDroneVelocity.magnitude;
 
@@ -131,14 +160,12 @@ namespace KazatanGames.LD53
             {
                 newDroneVelocity = Vector3.zero;
                 newDroneSpeed = 0f;
-            } else if (newDroneSpeed > LD53AppManager.INSTANCE.AppConfig.maxDroneSpeed)
+            }
+            else if (newDroneSpeed > LD53AppManager.INSTANCE.AppConfig.maxDroneSpeed)
             {
                 newDroneVelocity = newDroneVelocity.normalized * LD53AppManager.INSTANCE.AppConfig.maxDroneSpeed;
                 newDroneSpeed = LD53AppManager.INSTANCE.AppConfig.maxDroneSpeed;
             }
-
-            // movement
-            newDronePosition += newDroneVelocity * frameTime;
 
             dronePosition = newDronePosition;
             droneVelocity = newDroneVelocity;

@@ -17,6 +17,12 @@ namespace KazatanGames.LD53
     {
         protected override bool PersistAcrossScenes => false;
 
+        protected override void Initialise()
+        {
+            base.Initialise();
+            MusicManager.INSTANCE.PlayClip(0);
+        }
+
         public void PlayClicked()
         {
             SceneManager.LoadScene(LD53AppManager.INSTANCE.AppConfig.gameScene, LoadSceneMode.Single);

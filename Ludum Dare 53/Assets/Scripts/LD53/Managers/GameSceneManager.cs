@@ -39,6 +39,7 @@ namespace KazatanGames.LD53
         protected GameControlsInputActions controls;
         protected Transform container;
         protected Plane p = new(Vector3.left, Vector3.forward, Vector3.right);
+        protected Vector3 droneLastPosition;
 
         // controllers
         protected DroneController droneController;
@@ -49,6 +50,7 @@ namespace KazatanGames.LD53
 
         // events
         public event System.Action OnBuilt;
+        public event System.Action OnDroneMovedDistance;
 
         protected override void Initialise()
         {
@@ -60,6 +62,8 @@ namespace KazatanGames.LD53
             Build();
 
             GameModel.Current.OnGameOver += OnGameOver;
+
+            MusicManager.INSTANCE.PlayClip(1);
         }
 
         private void Start()
@@ -81,19 +85,22 @@ namespace KazatanGames.LD53
                 return;
             }
 
-            if (!pausedForEnd)
+            if (pausedForEnd) return;
+
+            DoInput();
+
+            timeBank += Time.deltaTime;
+
+            while (timeBank >= frameTime)
             {
+                Tick();
+                timeBank -= frameTime;
+            }
 
-                DoInput();
-
-                timeBank += Time.deltaTime;
-
-                while (timeBank >= frameTime)
-                {
-                    Tick();
-                    timeBank -= frameTime;
-                }
-
+            if (Mathf.Abs(droneLastPosition.x - GameModel.Current.dronePosition.x) + Mathf.Abs(droneLastPosition.z - GameModel.Current.dronePosition.z) >= LD53AppManager.INSTANCE.AppConfig.moveTriggerDistance)
+            {
+                droneLastPosition = GameModel.Current.dronePosition;
+                OnDroneMovedDistance?.Invoke();
             }
 
             GameModel.Current.Frame(Time.deltaTime);
@@ -151,6 +158,8 @@ namespace KazatanGames.LD53
 
             GameModel.Current.Reset();
 
+            droneLastPosition = GameModel.Current.dronePosition;
+
             GameplayEnd();
         }
 
@@ -170,7 +179,7 @@ namespace KazatanGames.LD53
             {
                 for (int z = 0; z < LD53AppManager.INSTANCE.AppConfig.playAreaSize.y; z++)
                 {
-                    CellData cell = GameModel.Current.cells[x, z];
+                    CellData cell = GameModel.Current.world.cells[x, z];
                     switch (cell.cellType)
                     {
                         case CellTypeEnum.LandingPad:
@@ -188,10 +197,10 @@ namespace KazatanGames.LD53
                             break;
                         case CellTypeEnum.Road:
                             GameDirection otherRoads = GameDirectionHelper.Nil;
-                            if (x > 0 && GameModel.Current.cells[x - 1, z].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.West;
-                            if (z > 0 && GameModel.Current.cells[x, z - 1].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.South;
-                            if (x < LD53AppManager.INSTANCE.AppConfig.playAreaSize.x - 1 && GameModel.Current.cells[x + 1, z].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.East;
-                            if (z < LD53AppManager.INSTANCE.AppConfig.playAreaSize.y - 1 && GameModel.Current.cells[x, z + 1].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.North;
+                            if (x > 0 && GameModel.Current.world.cells[x - 1, z].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.West;
+                            if (z > 0 && GameModel.Current.world.cells[x, z - 1].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.South;
+                            if (x < LD53AppManager.INSTANCE.AppConfig.playAreaSize.x - 1 && GameModel.Current.world.cells[x + 1, z].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.East;
+                            if (z < LD53AppManager.INSTANCE.AppConfig.playAreaSize.y - 1 && GameModel.Current.world.cells[x, z + 1].cellType == CellTypeEnum.Road) otherRoads |= GameDirection.North;
 
                             if (otherRoads == GameDirectionHelper.All)
                             {

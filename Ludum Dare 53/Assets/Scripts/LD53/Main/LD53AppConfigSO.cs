@@ -27,6 +27,7 @@ namespace KazatanGames.LD53
         public float droneIntroLength = 3f;
         public float droneDragCoeff = 2f;
         public float maxDroneSpeed = 10f;
+        public float droneWallBound = 0.75f;
         public float rotorRotationSpeed = 720f;
         public float droneAcceleration = 5f;
         public float rotorMaxLeanAngle = 25f;
@@ -55,5 +56,9 @@ namespace KazatanGames.LD53
         public int targetSpreadRows = 3;
         public int minOfficeFloors = 2;
         public int maxOfficeFloors = 12;
+
+        [Header("Performance")]
+        public float moveTriggerDistance = 8f;
+        public float drawDistance = 100f;
     }
 }

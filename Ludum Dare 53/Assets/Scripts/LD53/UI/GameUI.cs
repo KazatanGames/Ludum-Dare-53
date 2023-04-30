@@ -31,7 +31,7 @@ namespace KazatanGames.LD53
 
                 timerTxt.SetText($"{mins:D2}:{remSecs:D2}:{remMsecs:D3}");
 
-                progressTxt.SetText($"{GameModel.Current.gameScore:D2} / {WorldGen.TargetsGeneratedLastGeneration:D2}");
+                progressTxt.SetText($"{GameModel.Current.gameScore:D2} / {GameModel.Current.world.targetCount:D2}");
             }
             else if (LD53AppManager.INSTANCE.Common.chosenGameMode == GameMode.TargetHunt)
             {

@@ -286,6 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b1c60a2db9be97f4cb918ee78f59d631, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabsToCreate: []
+  prefabsToCreate:
+  - {fileID: 3042903562793255127, guid: 7c76a81d72b6d104caa62933bc86e05a, type: 3}
   introElements: []
   config: {fileID: 11400000, guid: 39a605c889dc20742a06f9e6cb663b02, type: 2}

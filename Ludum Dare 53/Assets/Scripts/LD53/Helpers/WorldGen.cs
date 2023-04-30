@@ -13,9 +13,7 @@ namespace KazatanGames.LD53
 {
     public static class WorldGen
     {
-        public static int TargetsGeneratedLastGeneration = 0;
-
-        public static CellData[,] Generate(int w, int h)
+        public static WorldData Generate(int w, int h)
         {
             CellData[,] cells = new CellData[w, h];
 
@@ -82,9 +80,13 @@ namespace KazatanGames.LD53
                 RandomGrass(cells, LD53AppManager.INSTANCE.AppConfig.genGrass, ref validCells, ref validCellsHash);
             }
 
-            GenerateTargetHuntTargets(cells, w, h);
+            int targetCount = GenerateTargetHuntTargets(cells, w, h);
 
-            return cells;
+            return new WorldData()
+            {
+                cells = cells,
+                targetCount = targetCount
+            };
         }
 
         private static bool IsEdge(int x, int y, int w, int h, int offset = 0)
@@ -183,49 +185,67 @@ namespace KazatanGames.LD53
             }
         }
 
-        private static void GenerateTargetHuntTargets(CellData[,] cells, int w, int h)
+        private static int GenerateTargetHuntTargets(CellData[,] cells, int w, int h)
         {
-            int totalGridSquares = LD53AppManager.INSTANCE.AppConfig.targetSpreadColumns * LD53AppManager.INSTANCE.AppConfig.targetSpreadRows;
-            int gridSquareWidth = w / LD53AppManager.INSTANCE.AppConfig.targetSpreadColumns;
-            int gridSquareHeight = h / LD53AppManager.INSTANCE.AppConfig.targetSpreadRows;
-            int targetsPerGridSquare = LD53AppManager.INSTANCE.AppConfig.targetsToHunt / totalGridSquares;
-            int remainderTargets = LD53AppManager.INSTANCE.AppConfig.targetsToHunt - (targetsPerGridSquare * totalGridSquares);
+            int colCells = Mathf.CeilToInt(w / LD53AppManager.INSTANCE.AppConfig.targetSpreadColumns);
+            int rowCells = Mathf.CeilToInt(h / LD53AppManager.INSTANCE.AppConfig.targetSpreadRows);
 
-            TargetsGeneratedLastGeneration = 0;
+            Dictionary<GridPos, List<GridPos>> validCellsByGenerationGrid = new();
+            List<GridPos> gridSquares = AllGridSquares(LD53AppManager.INSTANCE.AppConfig.targetSpreadColumns, LD53AppManager.INSTANCE.AppConfig.targetSpreadRows);
+            foreach (GridPos gpos in gridSquares)
+            {
+                validCellsByGenerationGrid.Add(gpos, new());
+            }
 
-            HashSet <GridPos> validCells = new();
+            int totalValidCells = 0;
             for (int x = 0; x < w; x++)
             {
                 for (int y = 0; y < h; y++)
                 {
-                    if(!IsEdge(x, y, w, h) && !IsCenter(x, y, w, h)) validCells.Add(new(x, y));
-                }
-            }
-
-            for (int gX = 0; gX < LD53AppManager.INSTANCE.AppConfig.targetSpreadColumns; gX++)
-            {
-                for (int gY = 0; gY < LD53AppManager.INSTANCE.AppConfig.targetSpreadRows; gY++)
-                {
-                    bool invalidCell = true;
-                    int gXOffset = gX * gridSquareWidth;
-                    int gYOffset = gY * gridSquareHeight;
-                    int cellsToFind = targetsPerGridSquare;
-                    while ((invalidCell || cellsToFind > 0) && TargetsGeneratedLastGeneration < LD53AppManager.INSTANCE.AppConfig.targetsToHunt)
+                    if (!IsEdge(x, y, w, h) && !IsCenter(x, y, w, h))
                     {
-                        GridPos candidate = new(gXOffset + Random.Range(0, gridSquareWidth), gYOffset + Random.Range(0, gridSquareHeight));
-                        if (validCells.Contains(candidate))
-                        {
-                            invalidCell = false;
-                            cellsToFind--;
-                            cells[candidate.x, candidate.z].targetHuntTarget = true;
-                            TargetsGeneratedLastGeneration++;
-                        } else
-                        {
-                            invalidCell = true;
-                        }
+                        validCellsByGenerationGrid[new(Mathf.FloorToInt(x / colCells), Mathf.FloorToInt(y / rowCells))].Add(new(x, y));
+                        totalValidCells++;
                     }
                 }
             }
+
+            int targetsGenerated = 0;
+
+            while(targetsGenerated < LD53AppManager.INSTANCE.AppConfig.targetsToHunt && totalValidCells > 0)
+            {
+                if (gridSquares.Count == 0)
+                {
+                    gridSquares = AllGridSquares(LD53AppManager.INSTANCE.AppConfig.targetSpreadColumns, LD53AppManager.INSTANCE.AppConfig.targetSpreadRows);
+                }
+                int index = Random.Range(0, gridSquares.Count);
+                GridPos pos = gridSquares[index];
+                gridSquares.RemoveAt(index);
+
+                if (validCellsByGenerationGrid[pos].Count > 0)
+                {
+                    int cIndex = Random.Range(0, validCellsByGenerationGrid[pos].Count);
+                    GridPos candidate = validCellsByGenerationGrid[pos][cIndex];
+                    validCellsByGenerationGrid[pos].RemoveAt(cIndex);
+                    cells[candidate.x, candidate.z].targetHuntTarget = true;
+                    targetsGenerated++;
+                }
+            }
+
+            return targetsGenerated;
+        }
+
+        private static List<GridPos> AllGridSquares(int w, int h)
+        {
+            List<GridPos> gSquares = new();
+            for (int gX = 0; gX < w; gX++)
+            {
+                for (int gY = 0; gY < h; gY++)
+                {
+                    gSquares.Add(new(gX, gY));
+                }
+            }
+            return gSquares;
         }
     }
 }

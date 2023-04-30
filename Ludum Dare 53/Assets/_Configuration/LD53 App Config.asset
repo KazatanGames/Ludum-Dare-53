@@ -32,18 +32,19 @@ MonoBehaviour:
   droneIntroLength: 3
   droneDragCoeff: 2
   maxDroneSpeed: 17.5
+  droneWallBound: 0.75
   rotorRotationSpeed: 1675
   droneAcceleration: 32.5
   rotorMaxLeanAngle: 25
   droneMaxLeanAngle: 25
   fireDelay: 0.5
-  parcelDropOffset: 2.5
+  parcelDropOffset: 1
   parcelYFireSpeed: -4
   parcelTorqueMax: 50
   cameraMinHeight: 15
   cameraMaxHeight: 45
   cameraHeightSmoothTime: 0.333333
-  targetsToHunt: 50
+  targetsToHunt: 1
   playAreaSize: {x: 32, y: 24}
   playAreaGridSize: 8
   grassChance: 0.5
@@ -53,7 +54,9 @@ MonoBehaviour:
   genGrass: 1
   genLoops: 12
   roadStraightChance: 0.8
-  targetSpreadColumns: 5
-  targetSpreadRows: 5
+  targetSpreadColumns: 4
+  targetSpreadRows: 4
   minOfficeFloors: 2
   maxOfficeFloors: 12
+  moveTriggerDistance: 15
+  drawDistance: 75
