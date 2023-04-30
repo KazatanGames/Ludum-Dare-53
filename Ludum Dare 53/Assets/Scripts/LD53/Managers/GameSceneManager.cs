@@ -115,6 +115,7 @@ namespace KazatanGames.LD53
         protected void OnGameOver()
         {
             pausedForEnd = true;
+            MusicManager.INSTANCE.PlayClip(2, false);
             GameplayEnd();
             Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.gameOver, canvas);
         }
@@ -143,6 +144,8 @@ namespace KazatanGames.LD53
 
         protected void Reset()
         {
+            MusicManager.INSTANCE.PlayClip(1);
+
             officeBuildingControllers = new();
             timeBank = 0f;
             frameTime = 1f / simulationFps;

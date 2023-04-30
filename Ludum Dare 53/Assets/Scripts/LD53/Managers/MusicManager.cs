@@ -23,11 +23,19 @@ namespace KazatanGames.LD53
 
         protected int nextIndex;
 
-        public void PlayClip(int index)
+        public void PlayClip(int index, bool fade = true)
         {
             if (clips.Length <= index || index < 0) return;
             if (index == nextIndex) return;
             nextIndex = index;
+
+            if (!fade)
+            {
+                source.Stop();
+                source.clip = clips[nextIndex];
+                source.volume = volume;
+                source.Play();
+            }
         }
 
         protected override void Initialise()

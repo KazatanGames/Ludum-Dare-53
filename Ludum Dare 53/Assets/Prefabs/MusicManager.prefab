@@ -144,6 +144,6 @@ MonoBehaviour:
   clips:
   - {fileID: 8300000, guid: d1f424809b9b7894e87c95affc1f9352, type: 3}
   - {fileID: 8300000, guid: 440c72c4bc1b5064aa887befe648630c, type: 3}
+  - {fileID: 8300000, guid: 428fbce4b4addaf46835e51b32ea9a85, type: 3}
   source: {fileID: 3042903562793255120}
   volume: 0.75
-  fadeTime: 4
