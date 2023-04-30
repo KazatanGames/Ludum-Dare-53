@@ -14,20 +14,25 @@ namespace KazatanGames.LD53
 {
     public class DroneController : MonoBehaviour
     {
-        [SerializeField]
-        protected Transform aimArrowStretcher; // stretch this (z)
-        [SerializeField]
-        protected Transform aimArrow; // rotate this
-
         private void Awake()
         {
             UpdatePosition();
+            GameModel.Current.OnReset += OnReset;
+        }
+
+        private void OnDestroy()
+        {
+            GameModel.Current.OnReset -= OnReset;
         }
 
         private void Update()
         {
-            if (GameSceneManager.INSTANCE.IsPaused) return;
+            UpdatePosition();
+            UpdateRotation();
+        }
 
+        protected void OnReset()
+        {
             UpdatePosition();
             UpdateRotation();
         }

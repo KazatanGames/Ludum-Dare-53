@@ -46,10 +46,14 @@ namespace KazatanGames.LD53
                     float yEdgeProx = Easing.Quadratic.InOut(Mathf.Abs((((float)y / h) - 0.5f) * 2f));
                     grassInvChance += (1.05f - LD53AppManager.INSTANCE.AppConfig.grassChance) * Mathf.Max(xEdgeProx, yEdgeProx);
 
-                    if (IsEdge(x, y, w, h))
+                    if (IsCenter(x, y, w, h))
+                    {
+                        cell.cellType = CellTypeEnum.LandingPad;
+                    } else if (IsEdge(x, y, w, h))
                     {
                         // edge of world - add an office
                         cell.cellType = CellTypeEnum.Office;
+                        cell.officeFloors = Random.Range(LD53AppManager.INSTANCE.AppConfig.minOfficeFloors, LD53AppManager.INSTANCE.AppConfig.maxOfficeFloors);
                     } else if (IsEdge(x, y, w, h, 1))
                     {
                         // one in from edge of world - add a road
@@ -86,6 +90,11 @@ namespace KazatanGames.LD53
             return x == offset || y == offset || x == (w - (1 + offset)) || y == (h - (1 + offset));
         }
 
+        private static bool IsCenter(int x, int y, int w, int h)
+        {
+            return x == w / 2 && y == h / 2;
+        }
+
         private static void RandomOffices(CellData[,] cells, int num, ref List<GridPos> validCells, ref HashSet<GridPos> validCellsHash)
         {
             for(int i = 0; i < num; i++)
@@ -96,6 +105,7 @@ namespace KazatanGames.LD53
                 validCells.RemoveAt(rnd);
                 validCellsHash.Remove(pos);
                 cells[pos.x, pos.z].cellType = CellTypeEnum.Office;
+                cells[pos.x, pos.z].officeFloors = Random.Range(LD53AppManager.INSTANCE.AppConfig.minOfficeFloors, LD53AppManager.INSTANCE.AppConfig.maxOfficeFloors);
             }
         }
 
@@ -179,12 +189,12 @@ namespace KazatanGames.LD53
             int targetsPerGridSquare = LD53AppManager.INSTANCE.AppConfig.targetsToHunt / totalGridSquares;
             int remainderTargets = LD53AppManager.INSTANCE.AppConfig.targetsToHunt - (targetsPerGridSquare * totalGridSquares);
 
-            HashSet<GridPos> validCells = new();
+            HashSet <GridPos> validCells = new();
             for (int x = 0; x < w; x++)
             {
                 for (int y = 0; y < h; y++)
                 {
-                    if(!IsEdge(x, y, w, h)) validCells.Add(new(x, y));
+                    if(!IsEdge(x, y, w, h) && !IsCenter(x, y, w, h)) validCells.Add(new(x, y));
                 }
             }
 

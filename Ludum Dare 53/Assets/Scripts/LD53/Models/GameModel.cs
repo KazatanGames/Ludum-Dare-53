@@ -24,14 +24,23 @@ namespace KazatanGames.LD53
         public bool playerFired;
         public float nextFire;
         public Vector2 aimInput;
+        public float gameTime;
+        public int gameScore;
+        public float introTime;
+        public float introRatio;
 
         public CellData[,] cells;
 
         public event Action<Vector3, Vector3> OnFire;
+        public event Action OnReset;
 
         public void Reset()
         {
-            dronePosition = new((LD53AppManager.INSTANCE.AppConfig.playAreaSize.x * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize) / 2f, LD53AppManager.INSTANCE.AppConfig.droneHeight, (LD53AppManager.INSTANCE.AppConfig.playAreaSize.y * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize) / 2f);
+            dronePosition = new(
+                ((LD53AppManager.INSTANCE.AppConfig.playAreaSize.x + 1f) * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize) / 2f,
+                0f,
+                ((LD53AppManager.INSTANCE.AppConfig.playAreaSize.y + 1f) * LD53AppManager.INSTANCE.AppConfig.playAreaGridSize) / 2f
+            );
             droneVelocity = Vector3.zero;
             droneAcceleration = Vector3.zero;
             dronePlayerAccel = Vector3.zero;
@@ -41,6 +50,12 @@ namespace KazatanGames.LD53
             aimInput = Vector2.zero;
             nextFire = 0f;
             cells = WorldGen.Generate(LD53AppManager.INSTANCE.AppConfig.playAreaSize.x, LD53AppManager.INSTANCE.AppConfig.playAreaSize.y);
+            gameTime = 0f;
+            gameScore = 0;
+            introTime = 0f;
+            introRatio = 0f;
+
+            OnReset?.Invoke();
         }
 
         public void Tick(float tickTime)
@@ -59,6 +74,7 @@ namespace KazatanGames.LD53
                     nextFire = LD53AppManager.INSTANCE.AppConfig.fireDelay;
                 }
             }
+            gameTime += tickTime;
         }
 
         public void Frame(float frameTime)
@@ -66,6 +82,27 @@ namespace KazatanGames.LD53
             droneAcceleration = dronePlayerAccel + droneWindAccel;
 
             DroneMovement(frameTime);
+        }
+
+        public void IntroFrame(float frameTime)
+        {
+            introTime += frameTime;
+            introRatio = introTime / LD53AppManager.INSTANCE.AppConfig.droneIntroLength;
+            introRatio = Mathf.Clamp(introRatio, 0f, 1f);
+            float droneHeight = Easing.Quadratic.InOut(introRatio) * LD53AppManager.INSTANCE.AppConfig.droneHeight;
+            dronePosition = new(dronePosition.x, droneHeight, dronePosition.z);
+        }
+
+        public void TargetHit(GridPos pos)
+        {
+            if (LD53AppManager.INSTANCE.Common.chosenGameMode == GameMode.TargetHunt)
+            {
+                cells[pos.x, pos.z].targetHuntTarget = false;
+                gameScore++;
+            } else
+            {
+                // TODO: time attack
+            }
         }
 
         protected void DroneMovement(float frameTime)

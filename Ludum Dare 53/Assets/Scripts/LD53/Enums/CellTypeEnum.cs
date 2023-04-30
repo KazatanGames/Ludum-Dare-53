@@ -22,6 +22,7 @@ namespace KazatanGames.LD53
         RoadTJunc,
         RoadXJunc,
         RoadDeadEnd,*/
-        Grass
+        Grass,
+        LandingPad
     }
 }

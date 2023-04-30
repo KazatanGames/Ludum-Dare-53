@@ -16,6 +16,7 @@ namespace KazatanGames.LD53
     {
         public GridPos pos;
         public CellTypeEnum cellType;
+        public int officeFloors;
         public bool targetHuntTarget;
     }
 }

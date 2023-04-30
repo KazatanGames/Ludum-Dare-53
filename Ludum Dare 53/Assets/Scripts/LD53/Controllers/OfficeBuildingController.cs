@@ -15,31 +15,14 @@ namespace KazatanGames.LD53
     {
         [SerializeField]
         protected BoxCollider physicsCollider;
+        [SerializeField]
+        protected Transform officeTop;
 
-        [SerializeField]
-        protected int minFloors = 3;
-        [SerializeField]
-        protected int maxFloors = 12;
-        [SerializeField]
-        protected float floorSpacing = 2f;
-
-        protected override void Initialise()
+        public void Build(int floors)
         {
-            int floors = Random.Range(minFloors, maxFloors);
-            for (int i = 0; i < floors; i++)
-            {
-                Transform t = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.officeBuildingFloor, transform);
-                t.localPosition = new(0, i * floorSpacing, 0f);
-            }
-            {
-                Transform t = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.officeBuildingTop, transform);
-                t.localPosition = new(0, floors * floorSpacing, 0f);
-            }
-
-            physicsCollider.center = new(0, (floors + 1) * floorSpacing / 2f, 0);
-            physicsCollider.size = new(physicsCollider.size.x, (floors + 1) * floorSpacing, physicsCollider.size.z);
-
-            base.Initialise();
+            officeTop.localScale = new Vector3(1, floors * 2f, 1);
+            physicsCollider.center = new(0, floors, 0);
+            physicsCollider.size = new(physicsCollider.size.x, floors * 2f, physicsCollider.size.z);
         }
     }
 }

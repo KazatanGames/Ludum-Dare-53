@@ -16,6 +16,8 @@ MonoBehaviour:
     type: 3}
   parcelPrefab: {fileID: 5470553440283873857, guid: 163ed27bd9ba7594ca9f31d5ca4db619,
     type: 3}
+  targetPrefab: {fileID: 8623270408270038405, guid: bf9becb71d8baf1458d17ee9c6d4e6d3,
+    type: 3}
   officeBuilding: {fileID: 2045254043733930403, guid: f714b6972fb9d4a4fadab9d5eaabd6ac,
     type: 3}
   roadStraight: {fileID: 4046041242787693400, guid: 6b6f27efcf1567247986ba136dcf018b,
@@ -32,9 +34,7 @@ MonoBehaviour:
     type: 3}
   grassGround: {fileID: 4046041242787693400, guid: 838af5b308c9d144cbfe76268bb5b70d,
     type: 3}
-  officeBuildingTop: {fileID: 7021589638943258738, guid: d9130a8de251c654ca47128f653f70b7,
-    type: 3}
-  officeBuildingFloor: {fileID: 7863794524650583030, guid: 8ef553cb78fb3af4c8b134f33cfcf7a0,
+  landingPad: {fileID: 4046041242787693400, guid: 1d89b744aaef5bd4cbb647306fc2589f,
     type: 3}
   countdown: {fileID: 3248854677911760572, guid: ed6431f391498fe45baa38d11010db51,
     type: 3}

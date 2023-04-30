@@ -22,6 +22,9 @@ namespace KazatanGames.LD53
         [Header("Parcel")]
         public ParcelController parcelPrefab;
 
+        [Header("Target")]
+        public TargetController targetPrefab;
+
         [Header("Cell Types")]
         public OfficeBuildingController officeBuilding;
         public Transform roadStraight;
@@ -31,10 +34,7 @@ namespace KazatanGames.LD53
         public Transform roadDeadEnd;
         public Transform concreteGround;
         public Transform grassGround;
-
-        [Header("Office Building")]
-        public Transform officeBuildingTop;
-        public Transform officeBuildingFloor;
+        public Transform landingPad;
 
         [Header("UI")]
         public CountdownPanel countdown;

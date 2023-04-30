@@ -15,6 +15,8 @@ namespace KazatanGames.LD53
 {
     public class TitleSceneManager : SingletonMonoBehaviour<TitleSceneManager>
     {
+        protected override bool PersistAcrossScenes => false;
+
         public void PlayClicked()
         {
             SceneManager.LoadScene(LD53AppManager.INSTANCE.AppConfig.gameScene, LoadSceneMode.Single);

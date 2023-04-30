@@ -31,6 +31,8 @@ namespace KazatanGames.LD53
         protected Color droneColor = Color.magenta;
         [SerializeField]
         protected Color targetColor = Color.yellow;
+        [SerializeField]
+        protected Color padColor = Color.blue;
 
         protected float timePerUpdate;
         protected float timeBank;
@@ -91,6 +93,9 @@ namespace KazatanGames.LD53
                                 break;
                             case CellTypeEnum.Office:
                                 c = officeColor;
+                                break;
+                            case CellTypeEnum.LandingPad:
+                                c = padColor;
                                 break;
                         }
                     }

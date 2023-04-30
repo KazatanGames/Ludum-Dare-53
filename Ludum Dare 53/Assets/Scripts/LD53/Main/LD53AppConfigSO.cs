@@ -24,14 +24,13 @@ namespace KazatanGames.LD53
 
         [Header("Game Settings")]
         public float droneHeight = 20f;
+        public float droneIntroLength = 3f;
         public float droneDragCoeff = 2f;
         public float maxDroneSpeed = 10f;
         public float rotorRotationSpeed = 720f;
         public float droneAcceleration = 5f;
         public float rotorMaxLeanAngle = 25f;
         public float droneMaxLeanAngle = 15f;
-        public float firePowerIncrease = 5f;
-        public float maxFirePower = 10f;
         public float fireDelay = 0.25f;
         public float parcelDropOffset = 2f;
         public float parcelYFireSpeed = -2f;
@@ -54,5 +53,7 @@ namespace KazatanGames.LD53
         public float roadStraightChance = 0.667f;
         public int targetSpreadColumns = 4;
         public int targetSpreadRows = 3;
+        public int minOfficeFloors = 2;
+        public int maxOfficeFloors = 12;
     }
 }

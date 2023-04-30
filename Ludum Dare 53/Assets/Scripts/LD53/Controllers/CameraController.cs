@@ -26,6 +26,18 @@ namespace KazatanGames.LD53
         {
             offsetHeight = targetOffsetHeight = LD53AppManager.INSTANCE.AppConfig.cameraMinHeight;
             heightVelocity = 0f;
+            GameModel.Current.OnReset += OnReset;
+        }
+
+        private void OnDestroy()
+        {
+            GameModel.Current.OnReset -= OnReset;
+        }
+
+        protected void OnReset()
+        {
+            offsetHeight = targetOffsetHeight = LD53AppManager.INSTANCE.AppConfig.cameraMinHeight;
+            heightVelocity = 0f;
         }
 
         private void Update()

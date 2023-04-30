@@ -15,6 +15,8 @@ namespace KazatanGames.LD53
 {
     public class GameSceneManager : SingletonMonoBehaviour<GameSceneManager>
     {
+        protected override bool PersistAcrossScenes => false;
+
         [Header("In Scene")]
         [SerializeField]
         protected CinemachineVirtualCameraBase topDownCamera;
@@ -69,7 +71,11 @@ namespace KazatanGames.LD53
 
         private void Update()
         {
-            if (pausedForStart) return;
+            if (pausedForStart)
+            {
+                GameModel.Current.IntroFrame(Time.deltaTime);
+                return;
+            }
 
             DoInput();
 
@@ -96,8 +102,8 @@ namespace KazatanGames.LD53
             pausedForStart = false;
             controls.DroneFlying.Enable();
             GameModel.Current.OnFire += OnPlayerFire;
-            controls.DroneFlying.Fire.performed += OnPlayerPowerUpStart;
-            controls.DroneFlying.Fire.canceled += OnPlayerPowerUpEnd;
+            controls.DroneFlying.Fire.performed += OnFirePerformed;
+            controls.DroneFlying.Fire.canceled += OnFireCancelled;
         }
 
         protected void GameplayEnd()
@@ -105,10 +111,11 @@ namespace KazatanGames.LD53
             GameModel.Current.OnFire -= OnPlayerFire;
             if (controls != null)
             {
-                controls.DroneFlying.Fire.performed -= OnPlayerPowerUpStart;
-                controls.DroneFlying.Fire.canceled -= OnPlayerPowerUpEnd;
+                controls.DroneFlying.Fire.performed -= OnFirePerformed;
+                controls.DroneFlying.Fire.canceled -= OnFireCancelled;
             }
             if (countdown != null) countdown.OnGo -= GameplayStart;
+            controls.DroneFlying.Disable();
         }
 
         protected void Reset()
@@ -126,6 +133,8 @@ namespace KazatanGames.LD53
             countdown = null;
 
             GameModel.Current.Reset();
+
+            GameplayEnd();
         }
 
         protected void Build()
@@ -147,8 +156,12 @@ namespace KazatanGames.LD53
                     CellData cell = GameModel.Current.cells[x, z];
                     switch (cell.cellType)
                     {
+                        case CellTypeEnum.LandingPad:
+                            BuildSimpleCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.landingPad, x, z);
+                            break;
                         case CellTypeEnum.Office:
-                            BuildComponentCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.officeBuilding, x, z);
+                            OfficeBuildingController obc = BuildComponentCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.officeBuilding, x, z);
+                            obc.Build(cell.officeFloors);
                             break;
                         case CellTypeEnum.Concrete:
                             BuildSimpleCell(LD53AppManager.INSTANCE.AppConfig.prefabRegister.concreteGround, x, z);
@@ -232,6 +245,16 @@ namespace KazatanGames.LD53
                             }
                             break;
                     }
+
+                    if(cell.targetHuntTarget)
+                    {
+                        float yOffset = 0.25f;
+                        if (cell.cellType == CellTypeEnum.Office)
+                        {
+                            yOffset += cell.officeFloors * 2f;
+                        }
+                        BuildTarget(x, z, yOffset);
+                    }
                 }
             }
 
@@ -264,6 +287,15 @@ namespace KazatanGames.LD53
             return cell;
         }
 
+        protected TargetController BuildTarget(int x, int z, float yOffset)
+        {
+            TargetController target = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.targetPrefab, container).GetComponent<TargetController>();
+            Vector3 gridCenter = PositionHelpers.CenterOfGridPosInWorld(x, z);
+            target.transform.localPosition = new(gridCenter.x, yOffset, gridCenter.z);
+            target.pos = new(x, z);
+            return target;
+        }
+
         protected void DoInput()
         {
             Vector2 moveInput = controls.DroneFlying.Movement.ReadValue<Vector2>();
@@ -281,18 +313,19 @@ namespace KazatanGames.LD53
 
         public bool IsPaused => pausedForStart;
 
-        public void RestartClicked()
+        public void RestartGame()
         {
             Reset();
             Build();
+            StartCountdown();
         }
 
-        protected void OnPlayerPowerUpStart(InputAction.CallbackContext context)
+        protected void OnFirePerformed(InputAction.CallbackContext context)
         {
             GameModel.Current.playerFiring = true;
         }
 
-        protected void OnPlayerPowerUpEnd(InputAction.CallbackContext context)
+        protected void OnFireCancelled(InputAction.CallbackContext context)
         {
             GameModel.Current.playerFiring = false;
         }
