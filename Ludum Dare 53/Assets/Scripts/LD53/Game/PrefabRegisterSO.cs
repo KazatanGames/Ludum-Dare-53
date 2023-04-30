@@ -35,5 +35,8 @@ namespace KazatanGames.LD53
         [Header("Office Building")]
         public Transform officeBuildingTop;
         public Transform officeBuildingFloor;
+
+        [Header("UI")]
+        public CountdownPanel countdown;
     }
 }

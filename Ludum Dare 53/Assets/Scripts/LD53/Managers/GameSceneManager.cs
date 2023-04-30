@@ -20,6 +20,8 @@ namespace KazatanGames.LD53
         protected CinemachineVirtualCameraBase topDownCamera;
         [SerializeField]
         protected Transform floorQuad;
+        [SerializeField]
+        protected RectTransform canvas;
 
         [Header("Settings")]
         [SerializeField]
@@ -39,6 +41,9 @@ namespace KazatanGames.LD53
         protected DroneController droneController;
         protected List<OfficeBuildingController> officeBuildingControllers;
 
+        // ui
+        protected CountdownPanel countdown;
+
         // events
         public event System.Action OnBuilt;
 
@@ -54,20 +59,12 @@ namespace KazatanGames.LD53
 
         private void Start()
         {
-            controls.DroneFlying.Enable();
-            GameModel.Current.OnFire += OnPlayerFire;
-            controls.DroneFlying.Fire.performed += OnPlayerPowerUpStart;
-            controls.DroneFlying.Fire.canceled += OnPlayerPowerUpEnd;
+            StartCountdown();
         }
 
         private void OnDestroy()
         {
-            GameModel.Current.OnFire -= OnPlayerFire;
-            if (controls != null)
-            {
-                controls.DroneFlying.Fire.performed -= OnPlayerPowerUpStart;
-                controls.DroneFlying.Fire.canceled -= OnPlayerPowerUpEnd;
-            }
+            GameplayEnd();
         }
 
         private void Update()
@@ -87,15 +84,46 @@ namespace KazatanGames.LD53
             GameModel.Current.Frame(Time.deltaTime);
         }
 
+        protected void StartCountdown()
+        {
+            countdown = Instantiate(LD53AppManager.INSTANCE.AppConfig.prefabRegister.countdown, canvas).GetComponent<CountdownPanel>();
+            countdown.OnGo += GameplayStart;
+        }
+
+        protected void GameplayStart()
+        {
+            if (countdown != null) countdown.OnGo -= GameplayStart;
+            pausedForStart = false;
+            controls.DroneFlying.Enable();
+            GameModel.Current.OnFire += OnPlayerFire;
+            controls.DroneFlying.Fire.performed += OnPlayerPowerUpStart;
+            controls.DroneFlying.Fire.canceled += OnPlayerPowerUpEnd;
+        }
+
+        protected void GameplayEnd()
+        {
+            GameModel.Current.OnFire -= OnPlayerFire;
+            if (controls != null)
+            {
+                controls.DroneFlying.Fire.performed -= OnPlayerPowerUpStart;
+                controls.DroneFlying.Fire.canceled -= OnPlayerPowerUpEnd;
+            }
+            if (countdown != null) countdown.OnGo -= GameplayStart;
+        }
+
         protected void Reset()
         {
             officeBuildingControllers = new();
             timeBank = 0f;
             frameTime = 1f / simulationFps;
-            pausedForStart = false;
+            pausedForStart = true;
             tick = 0;
 
             if (container != null) Destroy(container.gameObject);
+            if (countdown != null) DestroyImmediate(countdown.gameObject);
+
+            container = null;
+            countdown = null;
 
             GameModel.Current.Reset();
         }

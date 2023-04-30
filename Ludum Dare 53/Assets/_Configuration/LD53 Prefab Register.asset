@@ -36,3 +36,5 @@ MonoBehaviour:
     type: 3}
   officeBuildingFloor: {fileID: 7863794524650583030, guid: 8ef553cb78fb3af4c8b134f33cfcf7a0,
     type: 3}
+  countdown: {fileID: 3248854677911760572, guid: ed6431f391498fe45baa38d11010db51,
+    type: 3}
