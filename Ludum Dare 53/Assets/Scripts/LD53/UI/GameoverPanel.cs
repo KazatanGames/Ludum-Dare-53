@@ -49,10 +49,15 @@ namespace KazatanGames.LD53
             GameModel.Current.OnReset += OnReset;
         }
 
+        private void OnDestroy()
+        {
+            GameModel.Current.OnReset -= OnReset;
+        }
+
         protected void OnReset()
         {
             GameModel.Current.OnReset -= OnReset;
-            Destroy(gameObject);
+            if (gameObject != null) Destroy(gameObject);
         }
     }
 }

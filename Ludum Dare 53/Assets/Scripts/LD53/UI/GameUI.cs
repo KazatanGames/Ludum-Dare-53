@@ -45,11 +45,13 @@ namespace KazatanGames.LD53
 
         public void RestartClicked()
         {
+            LD53AppManager.INSTANCE.PlayClick();
             GameSceneManager.INSTANCE.RestartGame();
         }
 
         public void MenuClicked()
         {
+            LD53AppManager.INSTANCE.PlayClick();
             SceneManager.LoadScene(LD53AppManager.INSTANCE.AppConfig.titleScene, LoadSceneMode.Single);
         }
     }

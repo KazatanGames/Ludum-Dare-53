@@ -25,6 +25,7 @@ namespace KazatanGames.LD53
 
         public void PlayClicked()
         {
+            LD53AppManager.INSTANCE.PlayClick();
             SceneManager.LoadScene(LD53AppManager.INSTANCE.AppConfig.gameScene, LoadSceneMode.Single);
         }
     }

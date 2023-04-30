@@ -44,6 +44,7 @@ namespace KazatanGames.LD53
 
         public void ToggleOpen()
         {
+            LD53AppManager.INSTANCE.PlayClick();
             open = !open;
             if (open)
             {

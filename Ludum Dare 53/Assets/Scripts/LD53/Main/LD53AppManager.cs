@@ -14,6 +14,9 @@ namespace KazatanGames.LD53
 {
     public class LD53AppManager : AppManager<LD53AppManager, LD53AppConfigSO>
     {
+        [SerializeField]
+        protected AudioSource clickSource;
+
         public CommonData Common { get; private set; }
 
         protected override void Initialise()
@@ -21,6 +24,12 @@ namespace KazatanGames.LD53
             base.Initialise();
 
             Common = new();
+        }
+
+        public void PlayClick()
+        {
+            clickSource.Stop();
+            clickSource.Play();
         }
     }
 }

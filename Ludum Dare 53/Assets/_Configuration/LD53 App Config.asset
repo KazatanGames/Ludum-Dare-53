@@ -40,11 +40,11 @@ MonoBehaviour:
   fireDelay: 0.5
   parcelDropOffset: 1
   parcelYFireSpeed: -4
-  parcelTorqueMax: 50
+  parcelTorqueMax: 200
   cameraMinHeight: 15
   cameraMaxHeight: 45
   cameraHeightSmoothTime: 0.333333
-  targetsToHunt: 1
+  targetsToHunt: 20
   playAreaSize: {x: 32, y: 24}
   playAreaGridSize: 8
   grassChance: 0.5
